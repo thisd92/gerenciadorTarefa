@@ -4,6 +4,7 @@ import { useState } from "react";
 import { UserLogin } from "./type";
 import { BASE_URL } from "../../../utils/request";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 export default function Login() {
 
@@ -11,6 +12,8 @@ export default function Login() {
         username: "",
         password: ""
     }
+
+    const [userLogin, setUserLogin] = useState<UserLogin>(newUserLogin);
 
     function handleUsername(e: any) {
         const { name } = e.target;
@@ -22,11 +25,16 @@ export default function Login() {
         setUserLogin({ ...userLogin, [name]: e.target.value })
     }
 
-    const [userLogin, setUserLogin] = useState<UserLogin>(newUserLogin);
-
-    function sendUser(e: React.FormEvent) {
+    async function sendUser(e: React.FormEvent) {
         e.preventDefault()
-        axios.post(`${BASE_URL}/usersLogin`, userLogin);
+        try {
+            const response = await axios.post(`${BASE_URL}/usersSignin`, userLogin);
+            if (response.status === 200) {
+                window.location.href = "/taskManager";
+            }
+        } catch (error) {
+            console.log(error)
+        };
         console.log(userLogin)
     }
 
