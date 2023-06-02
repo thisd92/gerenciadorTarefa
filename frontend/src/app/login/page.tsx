@@ -4,7 +4,6 @@ import { useState } from "react";
 import { UserLogin } from "./type";
 import { BASE_URL } from "../../../utils/request";
 import axios from "axios";
-import { useRouter } from "next/router";
 
 export default function Login() {
 
@@ -28,7 +27,7 @@ export default function Login() {
     async function sendUser(e: React.FormEvent) {
         e.preventDefault()
         try {
-            const response = await axios.post(`${BASE_URL}/usersSignin`, userLogin);
+            const response = await axios.post(`${BASE_URL}/api/usersLogin`, userLogin);
             if (response.status === 200) {
                 window.location.href = "/taskManager";
             }
@@ -68,9 +67,7 @@ export default function Login() {
                         </form>
                     </div>
                 </div>
-
             </section>
-            <a href=""></a>
         </main>
     )
 }

@@ -68,7 +68,7 @@ export default function Register() {
     function sendRegister(e: React.FormEvent) {
         e.preventDefault()
         if(verifyPass()){
-            axios.post(`${BASE_URL}/user`, user);
+            axios.post(`${BASE_URL}/api/user`, user);
             console.log(user)
             setUser(newUser)
             setConfirmPassword(confirmaPassword)
