@@ -189,3 +189,19 @@ app.delete("/usersLogin/:id", (req, res) => {
             })
         })
 });
+
+function verifyPass(User, UserLogin) {
+    if (User.username == UserLogin.username && User.password == UserLogin.password) {
+        return true
+    }
+}
+
+app.post('/usersSignin', (req, res) => {
+    const newUserLogin = new UserLogin(req.body)
+    const userUsername = new User(User.findOne({ name: newUserLogin.username }))
+    verifyPass(newUserLogin, userUsername)
+    res.status(200).json({
+        usuario: newUserLogin,
+        message: "Logado"
+    })
+})
