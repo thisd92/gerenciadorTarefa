@@ -13,6 +13,7 @@ export default function Login() {
     }
 
     const [userLogin, setUserLogin] = useState<UserLogin>(newUserLogin);
+    const [errorMsg, setErrorMsg] = useState('');
 
     function handleUsername(e: any) {
         const { name } = e.target;
@@ -32,6 +33,8 @@ export default function Login() {
                 window.location.href = "/taskManager";
             }
         } catch (error) {
+            setErrorMsg("Invalid email or password")
+            setTimeout(() => setErrorMsg(""), 2000)
             console.log(error)
         };
         console.log(userLogin)
@@ -49,10 +52,11 @@ export default function Login() {
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     type="text" name="username" id="username" value={userLogin.username} onChange={handleUsername} />
                             </div>
-                            <div>
+                            <div className="flex flex-col">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">Password</label>
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     type="password" name="password" id="password" value={userLogin.password} onChange={handlePassword} />
+                                <span className="text-red-600">{errorMsg}</span>
                             </div>
                             <div className="flex items-center justify-between">
                                 <button className="bg-green-600 shadow-md rounded-md hover:bg-green-700 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline" type="submit">Sign In</button>

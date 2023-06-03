@@ -27,6 +27,7 @@ export default function Register() {
     const [user, setUser] = useState<User>(newUser);
     const [confirmPassword, setConfirmPassword] = useState<ValidatePass>(confirmaPassword);
     const [errorMsg, setErrorMsg] = useState('');
+    const [errorEmailMsg, setErrorEmailMsg] = useState('');
 
     function handleName(e: any) {
         const { name } = e.target;
@@ -75,53 +76,60 @@ export default function Register() {
     async function sendRegister(e: React.FormEvent) {
         e.preventDefault()
         if (verifyPass()) {
-            await axios.post(`${BASE_URL}/api/user`, user);
-            console.log(user)
-            setUser(newUser)
-            setConfirmPassword(confirmaPassword)
-            alert("Conta Cadastrada")
+            try {
+                await axios.post(`${BASE_URL}/api/user`, user);
+                console.log(user)
+                setUser(newUser)
+                setConfirmPassword(confirmaPassword)
+                alert("Conta Cadastrada")
+            } catch (error) {
+                setErrorEmailMsg("Email is already in use")
+                setTimeout(() => setErrorEmailMsg(""), 2000)
+                console.log(error)
+            };
         }
     }
 
     return (
-        <main className="flex min-h-screen flex-col items-center mt-24">
+        <main className="flex min-h-screen flex-col items-center mt-20">
             <section className="lg:w-3/12 md:w-2/6">
                 <div className="border-2 border-slate-300 rounded-md shadow-lg px-8 pt-6 pb-8 mb-4">
                     <header className="font-bold p-1">Create Account</header>
                     <div className="flex flex-col mt-4">
-                        <form onSubmit={sendRegister}>
-                            <div className="mt-2">
+                        <form className="flex flex-col gap-3" onSubmit={sendRegister}>
+                            <div className="">
                                 <label className="block text-gray-700 text-sm font-bold mb-2 " htmlFor="name">Name</label>
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     type="text" name="name" id="name" value={user.name} onChange={handleName} required />
                             </div>
-                            <div className="mt-2">
+                            <div className="">
                                 <label className="block text-gray-700 text-sm font-bold mb-2 " htmlFor="email">E-mail</label>
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     type="email" name="email" id="email" value={user.email} onChange={handleEmail} required />
+                                <span className="text-red-600">{errorEmailMsg}</span>
                             </div>
-                            <div className="mt-2">
+                            <div className="">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">Password</label>
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     type="password" name="password" id="password" value={user.password} onChange={handlePassword} onBlur={handlePassword} required />
                             </div>
-                            <div className="mt-2">
+                            <div className="">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="confirmPassword">Confirm Password</label>
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     type="password" name="confirmPassword" id="confirmPassword" value={confirmPassword.confirmPassword} onChange={handleConfirm} onBlur={verifyPass} required />
                                 <span className="text-red-600">{errorMsg}</span>
                             </div>
-                            <div className="mt-2">
+                            <div className="">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="birth">Birth</label>
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     type="date" name="birth" id="birth" value={user.birth} onChange={handleBirth} required />
                             </div>
-                            <div className="mt-2">
+                            <div className="">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="tel">Tel</label>
                                 <InputMask mask={mask} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     type="tel" name="tel" id="tel" value={user.tel} onChange={handleTel} required />
                             </div>
-                            <div className="mt-4 flex items-center justify-center">
+                            <div className="flex items-center justify-center">
                                 <button className="bg-green-600 w-full shadow-md rounded-md hover:bg-green-700 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline" type="submit">Sign Up</button>
                             </div>
                         </form>

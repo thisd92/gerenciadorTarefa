@@ -10,15 +10,18 @@ router.use((req, res, next) => {
     next();
 });
 
-router.post('/user', (req, res) => {
+router.post('/user', async (req, res) => {
     const newUser = new User(req.body)
+    const user = await User(User.findOne({ email: newUser.email }))
     newUser.save()
         .then((newUser) => {
+            res.status(200)
             return res.json(newUser)
         }).catch((erro) => {
+            res.status(400)
             return res.json({
                 error: true,
-                message: "Erro no cadastro."
+                message: "Email já utilizado."
             })
         })
 
@@ -130,7 +133,7 @@ router.delete("/usersLogin/:id", (req, res) => {
     //Apagar o registro no banco de dados MongoDB
     UserLogin.deleteOne({ _id: req.params.id })
         .then(() => {
-            return res.status(200).send("Usuário deletado!")
+            return res.status(200).send("Deleted User!")
         })
         .catch((err) => {
             return res.status(400).json({
@@ -149,11 +152,14 @@ function verifyPass(User, UserLogin) {
 router.post('/usersLogin', async (req, res) => {
     const newUserLogin = await UserLogin(req.body)
     const userUsername = await User(User.findOne({ email: newUserLogin.email }))
-    verifyPass(newUserLogin, userUsername)
-    res.status(200).json({
-        usuario: newUserLogin,
-        message: "Logado"
-    })
+    if(verifyPass(newUserLogin, userUsername)){
+        res.status(200).json({
+            usuario: newUserLogin,
+            message: "Logado"
+        })
+    }else {
+        res.status(400).send("Invalid email or password")
+    }
 })
 
 module.exports = router
