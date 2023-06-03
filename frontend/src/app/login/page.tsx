@@ -15,17 +15,12 @@ export default function Login() {
     const [userLogin, setUserLogin] = useState<UserLogin>(newUserLogin);
     const [errorMsg, setErrorMsg] = useState('');
 
-    function handleUsername(e: any) {
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const { name } = e.target;
         setUserLogin({ ...userLogin, [name]: e.target.value })
     }
 
-    function handlePassword(e: any) {
-        const { name } = e.target;
-        setUserLogin({ ...userLogin, [name]: e.target.value })
-    }
-
-    async function sendUser(e: React.FormEvent) {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
         try {
             const response = await axios.post(`${BASE_URL}/api/usersLogin`, userLogin);
@@ -46,16 +41,16 @@ export default function Login() {
                 <div className="border-2 border-slate-300 rounded-md shadow-lg px-8 pt-6 pb-8 mb-4">
                     <header className="font-bold p-1">Login</header>
                     <div className="flex flex-col mt-4">
-                        <form className="flex flex-col gap-2" onSubmit={sendUser}>
+                        <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
                             <div>
                                 <label className="block text-gray-700 text-sm font-bold mb-2 " htmlFor="username">E-mail</label>
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    type="text" name="username" id="username" value={userLogin.username} onChange={handleUsername} />
+                                    type="text" name="username" id="username" value={userLogin.username} onChange={handleChange} />
                             </div>
                             <div className="flex flex-col">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">Password</label>
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    type="password" name="password" id="password" value={userLogin.password} onChange={handlePassword} />
+                                    type="password" name="password" id="password" value={userLogin.password} onChange={handleChange} />
                                 <span className="text-red-600">{errorMsg}</span>
                             </div>
                             <div className="flex items-center justify-between">

@@ -11,12 +11,12 @@ const PhoneInput = ({ className, ...props }: any) => {
             mask={mask}
             onBlur={e => {
                 if (e.target.value.replace("_", "").length === 14) {
-                    setMask("+55(99) 9999-9999");
+                    setMask("(99) 9999-9999");
                 }
             }}
             onFocus={e => {
                 if (e.target.value.replace("_", "").length === 14) {
-                    setMask("+55(99) 99999-9999");
+                    setMask("(99) 99999-9999");
                 }
             }}
         >

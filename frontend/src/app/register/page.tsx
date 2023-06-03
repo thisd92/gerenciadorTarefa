@@ -5,7 +5,7 @@ import { BASE_URL } from "../../../utils/request";
 import axios from "axios";
 import PhoneInput from "@/components/PhoneInput/phoneInput";
 
-type ValidatePass = {
+interface ValidatePass {
     confirmPassword: string
 }
 
@@ -19,40 +19,28 @@ export default function Register() {
         tel: ""
     }
 
-    const confirmaPassword = {
+    const confirmPass = {
         confirmPassword: ""
     }
 
     const [user, setUser] = useState<User>(newUser);
-    const [confirmPassword, setConfirmPassword] = useState<ValidatePass>(confirmaPassword);
+    const [confirmPassword, setConfirmPassword] = useState<ValidatePass>(confirmPass);
     const [errorMsg, setErrorMsg] = useState('');
     const [errorEmailMsg, setErrorEmailMsg] = useState('');
 
-    function handleName(e: any) {
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const { name } = e.target;
         setUser({ ...user, [name]: e.target.value })
     }
 
-    function handleEmail(e: any) {
-        const { name } = e.target;
-        setUser({ ...user, [name]: e.target.value })
-    }
-
-    function handlePassword(e: any) {
-        const { name } = e.target;
-        setUser({ ...user, [name]: e.target.value })
-        console.log(user)
-    }
-
-    function handleConfirm(e: any) {
+    function handleConfirm(e: React.ChangeEvent<HTMLInputElement>) {
         const { name } = e.target;
         setConfirmPassword({ ...confirmPassword, [name]: e.target.value })
-        console.log(confirmPassword)
     }
 
     function verifyPass() {
         console.log(user.password + " " + confirmPassword.confirmPassword)
-        if (user.password == confirmPassword.confirmPassword) {
+        if (user.password === confirmPassword.confirmPassword) {
             return true
         } else {
             setErrorMsg("Password doesn't match")
@@ -61,25 +49,23 @@ export default function Register() {
         }
     }
 
-    function handleBirth(e: any) {
-        const { name } = e.target;
-        setUser({ ...user, [name]: e.target.value })
-    }
-
-    function handleTel(e: any) {
+    function handleTel(e: React.ChangeEvent<HTMLInputElement>) {
         const { name } = e.target;
         const valueWithoutMask = e.target.value.replace(/[^0-9]+/g, "");
         setUser({ ...user, [name]: valueWithoutMask })
     }
 
-    async function sendRegister(e: React.FormEvent) {
+    function resetValues() {
+        setUser(newUser)
+        setConfirmPassword(confirmPass)
+    }
+
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
         if (verifyPass()) {
             try {
                 await axios.post(`${BASE_URL}/api/user`, user);
-                console.log(user)
-                setUser(newUser)
-                setConfirmPassword(confirmaPassword)
+                resetValues()
                 alert("Conta Cadastrada")
             } catch (error) {
                 setErrorEmailMsg("Email is already in use")
@@ -95,22 +81,22 @@ export default function Register() {
                 <div className="border-2 border-slate-300 rounded-md shadow-lg px-8 pt-6 pb-8 mb-4">
                     <header className="font-bold p-1">Create Account</header>
                     <div className="flex flex-col mt-4">
-                        <form className="flex flex-col gap-3" onSubmit={sendRegister}>
+                        <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
                             <div className="">
                                 <label className="block text-gray-700 text-sm font-bold mb-2 " htmlFor="name">Name</label>
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    type="text" name="name" id="name" value={user.name} onChange={handleName} required />
+                                    type="text" name="name" id="name" value={user.name} onChange={handleChange} required />
                             </div>
                             <div className="">
                                 <label className="block text-gray-700 text-sm font-bold mb-2 " htmlFor="email">E-mail</label>
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    type="email" name="email" id="email" value={user.email} onChange={handleEmail} required />
+                                    type="email" name="email" id="email" value={user.email} onChange={handleChange} required />
                                 <span className="text-red-600">{errorEmailMsg}</span>
                             </div>
                             <div className="">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">Password</label>
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    type="password" name="password" id="password" value={user.password} onChange={handlePassword} onBlur={handlePassword} required />
+                                    type="password" name="password" id="password" value={user.password} onChange={handleChange} onBlur={handleChange} required />
                             </div>
                             <div className="">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="confirmPassword">Confirm Password</label>
@@ -121,7 +107,7 @@ export default function Register() {
                             <div className="">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="birth">Birth</label>
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    type="date" name="birth" id="birth" value={user.birth} onChange={handleBirth} required />
+                                    type="date" name="birth" id="birth" value={user.birth} onChange={handleChange} required />
                             </div>
                             <div className="">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="tel">Tel</label>
