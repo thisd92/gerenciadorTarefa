@@ -141,14 +141,14 @@ router.delete("/usersLogin/:id", (req, res) => {
 });
 
 function verifyPass(User, UserLogin) {
-    if (User.username == UserLogin.username && User.password == UserLogin.password) {
+    if (User.email == UserLogin.email && User.password == UserLogin.password) {
         return true
     }
 }
 
 router.post('/usersLogin', async (req, res) => {
     const newUserLogin = await UserLogin(req.body)
-    const userUsername = await User(User.findOne({ name: newUserLogin.username }))
+    const userUsername = await User(User.findOne({ email: newUserLogin.email }))
     verifyPass(newUserLogin, userUsername)
     res.status(200).json({
         usuario: newUserLogin,
