@@ -3,7 +3,7 @@ import { useState } from "react";
 import { User } from "./type";
 import { BASE_URL } from "../../../utils/request";
 import axios from "axios";
-import InputMask from 'react-input-mask';
+import PhoneInput from "@/components/PhoneInput/phoneInput";
 
 type ValidatePass = {
     confirmPassword: string
@@ -23,7 +23,6 @@ export default function Register() {
         confirmPassword: ""
     }
 
-    const [mask, setMask] = useState("+55 (99) 99999-9999");
     const [user, setUser] = useState<User>(newUser);
     const [confirmPassword, setConfirmPassword] = useState<ValidatePass>(confirmaPassword);
     const [errorMsg, setErrorMsg] = useState('');
@@ -69,9 +68,9 @@ export default function Register() {
 
     function handleTel(e: any) {
         const { name } = e.target;
-        setUser({ ...user, [name]: e.target.value })
+        const valueWithoutMask = e.target.value.replace(/[^0-9]+/g, "");
+        setUser({ ...user, [name]: valueWithoutMask })
     }
-
 
     async function sendRegister(e: React.FormEvent) {
         e.preventDefault()
@@ -126,8 +125,7 @@ export default function Register() {
                             </div>
                             <div className="">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="tel">Tel</label>
-                                <InputMask mask={mask} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    type="tel" name="tel" id="tel" value={user.tel} onChange={handleTel} required />
+                                <PhoneInput name="tel" id="tel" value={user.tel} onChange={handleTel} type="tel" required />
                             </div>
                             <div className="flex items-center justify-center">
                                 <button className="bg-green-600 w-full shadow-md rounded-md hover:bg-green-700 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline" type="submit">Sign Up</button>
