@@ -12,7 +12,6 @@ router.use((req, res, next) => {
 
 router.post('/user', async (req, res) => {
     const newUser = new User(req.body)
-    const user = await User(User.findOne({ email: newUser.email }))
     newUser.save()
         .then((newUser) => {
             res.status(200)
@@ -38,128 +37,84 @@ router.get("/user", (req, res) => {
     })
 });
 
-//Criar a rota "/user/:id" para ver os detalhes do user
-router.get("/user/:id", (req, res) => {
-    //Buscar no banco de dados o user conforme o ID enviado pela URL usando o findOne 
-    User.findOne({ _id: req.params.id }).then((user) => {
-        //retornar as informações do user para o aplicativo que fez a requisição
-        return res.json(user);
-    }).catch((erro) => {
-        //Retornar erro ao aplicativo que fez a requisição informando que não encontrou nenhum user
-        return res.status(400).json({
-            error: true,
-            message: "Nenhum user encontrado!"
-        })
-    })
-})
-
-//Cria a rota do tipo PUT para editar
-router.put("/user/:id", (req, res) => {
-    //Realizar alteração no banco de dados utilizando updateOne
-    //Receber o ID do user a ser editado: req.params.id
-    //Receber as insformações a serem editadas no banco de dados: req.body
-    const newUser = User.findOne(req.body)
-    newUser.updateOne(res.json)
-        .then((newUser) => {
-            //Retornar sucesso quando o user foi editado com sucesso
-            return res.json(newUser)
-        })
-        .catch((err) => {
-            return res.status(400).json({
+router.get("/user/:id", async (req, res) => {
+    try {
+        const { params: { id }, body: user } = req;
+        const usuario = await User.findById(id)
+        if (usuario) {
+            res.json(usuario)
+        } else {
+            res.status(404).json({
                 error: true,
-                message: "Error: user não foi editado com sucesso!"
+                message: "Usuário não encontrado"
             });
-        })
-});
-
-router.delete("/user/:id", (req, res) => {
-    //Apagar o registro no banco de dados MongoDB
-    User.deleteOne({ _id: req.params.id })
-        .then(() => {
-            return res.status(200).send("Usuário deletado!")
-        })
-        .catch((err) => {
-            return res.status(400).json({
-                error: true,
-                message: "Erro ao deletar usuário"
-            })
-        })
-});
-
-router.get("/usersLogin", (req, res) => {
-    UserLogin.find().then((userLogin) => {
-        return res.json(userLogin);
-    }).catch((erro) => {
-        return res.status(400).json({
-            error: true,
-            message: "Nenhum usuário encontrado!"
-        })
-    })
-});
-
-//Criar a rota "/user/:id" para ver os detalhes do user
-router.get("/usersLogin/:id", (req, res) => {
-    //Buscar no banco de dados o user conforme o ID enviado pela URL usando o findOne 
-    UserLogin.findOne({ _id: req.params.id }).then((userLogin) => {
-        //retornar as informações do user para o aplicativo que fez a requisição
-        return res.json(userLogin);
-    }).catch((erro) => {
-        //Retornar erro ao aplicativo que fez a requisição informando que não encontrou nenhum user
-        return res.status(400).json({
-            error: true,
-            message: "Nenhum user encontrado!"
-        })
-    })
+        }
+    } catch (error) {
+        res.status(500).send("Erro de servidor");
+    }
 })
 
-//Cria a rota do tipo PUT para editar
-router.put("/usersLogin/:id", (req, res) => {
-    //Realizar alteração no banco de dados utilizando updateOne
-    //Receber o ID do user a ser editado: req.params.id
-    //Receber as insformações a serem editadas no banco de dados: req.body
-    UserLogin.updateOne({ _id: req.params.id }, req.body, (err) => {
-        //Retornar erro quando não conseguir editar com sucesso
-        if (err) return res.status(400).json({
-            error: true,
-            message: "Error: user não foi editado com sucesso!"
-        });
 
-        //Retornar sucesso quando o user foi editado com sucesso
-        return res.send("User editado com sucesso!");
-    });
-});
+router.put("/user/:id", async (req, res) => {
+    try {
+        const { params: { id }, body: updatedUser } = req;
+        const user = await User.findByIdAndUpdate(id, updatedUser, { new: true });
 
-router.delete("/usersLogin/:id", (req, res) => {
-    //Apagar o registro no banco de dados MongoDB
-    UserLogin.deleteOne({ _id: req.params.id })
-        .then(() => {
-            return res.status(200).send("Deleted User!")
-        })
-        .catch((err) => {
-            return res.status(400).json({
+        if (user) {
+            res.status(200).json(user);
+        } else {
+            res.status(404).json({
                 error: true,
-                message: "Erro ao deletar usuário"
-            })
-        })
+                message: "Usuário não encontrado"
+            });
+        }
+    } catch (error) {
+        res.status(500).send("Erro de servidor");
+    }
 });
 
-function verifyPass(User, UserLogin) {
-    if (User.email == UserLogin.email && User.password == UserLogin.password) {
+router.delete("/user/:id", async (req, res) => {
+    try {
+        const { params: { id } } = req;
+        const user = await User.findByIdAndDelete(id);
+
+        if (user) {
+            res.status(200).json({
+                message: "Usuário deletado com sucesso"
+            });
+        } else {
+            res.status(404).json({
+                error: true,
+                message: "Usuário não encontrado"
+            });
+        }
+    } catch (error) {
+        res.status(500).send("Erro de servidor");
+    }
+});
+
+function verifyPass(user, userLogin) {
+    if (user.email === userLogin.email && user.password === userLogin.password) {
         return true
     }
 }
 
 router.post('/usersLogin', async (req, res) => {
-    const newUserLogin = await UserLogin(req.body)
-    const userUsername = await User(User.findOne({ email: newUserLogin.email }))
-    if(verifyPass(newUserLogin, userUsername)){
-        res.status(200).json({
-            usuario: newUserLogin,
-            message: "Logado"
-        })
-    }else {
-        res.status(400).send("Invalid email or password")
+    try {
+        const { body: userLogin } = req;
+        const user = await User.findOne({ email: userLogin.email });
+
+        if (user && user.password === userLogin.password) {
+            res.status(200).json({
+                usuario: user,
+                message: "Logado"
+            });
+        } else {
+            res.status(400).send("Email ou senha inválidos");
+        }
+    } catch (error) {
+        res.status(500).send("Erro de servidor");
     }
-})
+});
 
 module.exports = router
