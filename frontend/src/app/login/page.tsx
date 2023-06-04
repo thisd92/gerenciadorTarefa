@@ -1,12 +1,19 @@
 'use client'
-import Link from "next/link";
 import { useState } from "react";
-import { UserLogin } from "./type";
-import { BASE_URL } from "../../../utils/request";
 import axios from "axios";
 
-export default function Login() {
+import { UserLogin } from "./type";
+import { BASE_URL } from "../../../utils/request";
+import FormInput from "@/components/formInput/formInput";
+import FormButton from "@/components/formButton/formButton";
+import LabelForm from "@/components/labelForm/labelForm";
 
+import Link from "next/link";
+import { useRouter } from "next/router";
+import SpanError from "@/components/spanError/spanError";
+
+
+export default function Login() {
     const newUserLogin = {
         email: "",
         password: ""
@@ -14,7 +21,7 @@ export default function Login() {
 
     const [userLogin, setUserLogin] = useState<UserLogin>(newUserLogin);
     const [errorMsg, setErrorMsg] = useState('');
-    const [isLoading, setIsLoading] = useState(false); // Estado para controlar o indicador de carregamento
+    const [isLoading, setIsLoading] = useState(false);
 
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -25,7 +32,7 @@ export default function Login() {
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
         try {
-            setIsLoading(true); // Ativar o indicador de carregamento
+            setIsLoading(true);
             const response = await axios.post(`${BASE_URL}/api/usersLogin`, userLogin);
             if (response.status === 200) {
                 window.location.href = "/taskManager";
@@ -34,7 +41,7 @@ export default function Login() {
             setErrorMsg("Invalid Email or Password")
             setTimeout(() => setErrorMsg(""), 2000)
             console.log(error)
-        }finally{
+        } finally {
             setIsLoading(false);
         };
         console.log(userLogin)
@@ -47,20 +54,19 @@ export default function Login() {
                     <header className="font-bold p-1">Login</header>
                     <div className="flex flex-col mt-4">
                         <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
-                            <div>
-                                <label className="block text-gray-700 text-sm font-bold mb-2 " htmlFor="email">E-mail</label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    type="email" name="email" id="email" value={userLogin.email} onChange={handleChange} />
+                            <div className="flex flex-col">
+                                <LabelForm htmlFor="email">E-mail</LabelForm>
+                                <FormInput type="email" name="email" id="email" onChange={handleChange} />
                             </div>
                             <div className="flex flex-col">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">Password</label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    type="password" name="password" id="password" value={userLogin.password} onChange={handleChange} />
-                                <span className="text-red-600">{errorMsg}</span>
+                                <LabelForm htmlFor="password">Password</LabelForm>
+                                <FormInput type="password" name="password" id="password" onChange={handleChange} />
+                                <SpanError>{errorMsg}</SpanError>
                             </div>
                             <div className="flex items-center justify-between">
-                                <button className="bg-green-600 shadow-md rounded-md hover:bg-green-700 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline" 
-                                type="submit" disabled={isLoading} >{isLoading ? "Signing In" : "Sign In" }</button>
+                                <div>
+                                    <FormButton type="submit" disabled={isLoading}>{isLoading ? "Signing In" : "Sign In"}</FormButton>
+                                </div>
                                 <Link className="inline-block align-baseline font-bold text-sm hover:text-green-700" href="#">
                                     Forgot Password?
                                 </Link>

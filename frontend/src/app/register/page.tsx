@@ -3,7 +3,11 @@ import { useState } from "react";
 import { User } from "./type";
 import { BASE_URL } from "../../../utils/request";
 import axios from "axios";
-import PhoneInput from "@/components/PhoneInput/phoneInput";
+import PhoneInput from "@/components/phoneInput/phoneInput";
+import FormInput from "@/components/formInput/formInput";
+import FormButton from "@/components/formButton/formButton";
+import LabelForm from "@/components/labelForm/labelForm";
+import SpanError from "@/components/spanError/spanError";
 
 interface ValidatePass {
     confirmPassword: string
@@ -83,38 +87,33 @@ export default function Register() {
                     <div className="flex flex-col mt-4">
                         <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
                             <div className="">
-                                <label className="block text-gray-700 text-sm font-bold mb-2 " htmlFor="name">Name</label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    type="text" name="name" id="name" value={user.name} onChange={handleChange} required />
+                                <LabelForm htmlFor="name">Name</LabelForm>
+                                <FormInput type="text" name="name" id="name" onChange={handleChange} required />
                             </div>
                             <div className="">
-                                <label className="block text-gray-700 text-sm font-bold mb-2 " htmlFor="email">E-mail</label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    type="email" name="email" id="email" value={user.email} onChange={handleChange} required />
-                                <span className="text-red-600">{errorEmailMsg}</span>
+                                <LabelForm htmlFor="email">E-mail</LabelForm>
+                                <FormInput type="email" name="email" id="email" onChange={handleChange} required />
+                                <SpanError>{errorEmailMsg}</SpanError>
                             </div>
                             <div className="">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">Password</label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    type="password" name="password" id="password" value={user.password} onChange={handleChange} onBlur={handleChange} required />
+                                <LabelForm htmlFor="password">Password</LabelForm>
+                                <FormInput type="password" name="password" id="password" onChange={handleChange} onBlur={handleChange} required />
                             </div>
                             <div className="">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="confirmPassword">Confirm Password</label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    type="password" name="confirmPassword" id="confirmPassword" value={confirmPassword.confirmPassword} onChange={handleConfirm} onBlur={verifyPass} required />
-                                <span className="text-red-600">{errorMsg}</span>
+                                <LabelForm htmlFor="confirmPassword">Confirm Password</LabelForm>
+                                <FormInput type="password" name="confirmPassword" id="confirmPassword" onChange={handleConfirm} onBlur={verifyPass} required />
+                                <SpanError>{errorMsg}</SpanError>
                             </div>
                             <div className="">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="birth">Birth</label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    type="date" name="birth" id="birth" value={user.birth} onChange={handleChange} required />
+                                <LabelForm htmlFor="birth">Birth</LabelForm>
+                                <FormInput type="date" name="birth" id="birth" onChange={handleChange} required />
                             </div>
                             <div className="">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="tel">Tel</label>
+                                <LabelForm htmlFor="tel">Tel</LabelForm>
                                 <PhoneInput name="tel" id="tel" value={user.tel} onChange={handleTel} type="tel" required />
                             </div>
                             <div className="flex items-center justify-center">
-                                <button className="bg-green-600 w-full shadow-md rounded-md hover:bg-green-700 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline" type="submit">Sign Up</button>
+                                <FormButton type="submit">Sign Up</FormButton>
                             </div>
                         </form>
                     </div>
