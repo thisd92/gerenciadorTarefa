@@ -7,11 +7,9 @@ import { BASE_URL } from "../../../utils/request";
 import FormInput from "@/components/formInput/formInput";
 import FormButton from "@/components/formButton/formButton";
 import LabelForm from "@/components/labelForm/labelForm";
-
-import Link from "next/link";
-import { useRouter } from "next/router";
 import SpanError from "@/components/spanError/spanError";
 
+import Link from "next/link";
 
 export default function Login() {
     const newUserLogin = {
@@ -25,8 +23,8 @@ export default function Login() {
 
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-        const { name } = e.target;
-        setUserLogin({ ...userLogin, [name]: e.target.value })
+        const { name, value } = e.target;
+        setUserLogin({ ...userLogin, [name]: value })
     }
 
     async function handleSubmit(e: React.FormEvent) {

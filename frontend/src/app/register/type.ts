@@ -5,3 +5,7 @@ export interface User {
     birth: string,
     tel: string
 }
+
+export interface ValidatePass {
+    confirmPassword: string
+}

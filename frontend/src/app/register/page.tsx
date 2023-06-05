@@ -1,17 +1,14 @@
 'use client'
-import { useState } from "react";
-import { User } from "./type";
-import { BASE_URL } from "../../../utils/request";
+import { useState, useRef } from "react";
 import axios from "axios";
+
+import { User, ValidatePass } from "./type";
+import { BASE_URL } from "../../../utils/request";
 import PhoneInput from "@/components/phoneInput/phoneInput";
 import FormInput from "@/components/formInput/formInput";
 import FormButton from "@/components/formButton/formButton";
 import LabelForm from "@/components/labelForm/labelForm";
 import SpanError from "@/components/spanError/spanError";
-
-interface ValidatePass {
-    confirmPassword: string
-}
 
 export default function Register() {
 
@@ -31,19 +28,19 @@ export default function Register() {
     const [confirmPassword, setConfirmPassword] = useState<ValidatePass>(confirmPass);
     const [errorMsg, setErrorMsg] = useState('');
     const [errorEmailMsg, setErrorEmailMsg] = useState('');
+    const formRef = useRef<HTMLFormElement>(null)
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-        const { name } = e.target;
-        setUser({ ...user, [name]: e.target.value })
+        const { name, value } = e.target;
+        setUser({ ...user, [name]: value })
     }
 
     function handleConfirm(e: React.ChangeEvent<HTMLInputElement>) {
-        const { name } = e.target;
-        setConfirmPassword({ ...confirmPassword, [name]: e.target.value })
+        const { name, value } = e.target;
+        setConfirmPassword({ ...confirmPassword, [name]: value })
     }
 
     function verifyPass() {
-        console.log(user.password + " " + confirmPassword.confirmPassword)
         if (user.password === confirmPassword.confirmPassword) {
             return true
         } else {
@@ -54,14 +51,15 @@ export default function Register() {
     }
 
     function handleTel(e: React.ChangeEvent<HTMLInputElement>) {
-        const { name } = e.target;
-        const valueWithoutMask = e.target.value.replace(/[^0-9]+/g, "");
+        const { name, value } = e.target;
+        const valueWithoutMask = value.replace(/[^0-9]+/g, "");
         setUser({ ...user, [name]: valueWithoutMask })
     }
 
     function resetValues() {
         setUser(newUser)
         setConfirmPassword(confirmPass)
+        if (formRef.current) formRef.current.reset()
     }
 
     async function handleSubmit(e: React.FormEvent) {
@@ -85,7 +83,7 @@ export default function Register() {
                 <div className="border-2 border-slate-300 rounded-md shadow-lg px-8 pt-6 pb-8 mb-4">
                     <header className="font-bold p-1">Create Account</header>
                     <div className="flex flex-col mt-4">
-                        <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+                        <form ref={formRef} className="flex flex-col gap-3" onSubmit={handleSubmit}>
                             <div className="">
                                 <LabelForm htmlFor="name">Name</LabelForm>
                                 <FormInput type="text" name="name" id="name" onChange={handleChange} required />
