@@ -16,7 +16,8 @@ export default function TaskManager() {
     const newTask: Task = {
         name: "",
         description: "",
-        isFinished: false
+        isFinished: false,
+        _id: ""
     }
 
     const [tasks, setTasks] = useState<Task[]>([])
@@ -87,7 +88,7 @@ export default function TaskManager() {
                         </div>
                         <form ref={formRef} className="flex flex-col gap-2" onSubmit={handleSubmit}>
                             <div className="flex flex-col">
-                                <LabelForm htmlFor="name">Name</LabelForm>
+                                <LabelForm htmlFor="name">Task Name</LabelForm>
                                 <FormInput type="text" name="name" id="name" onChange={handleChange} />
                             </div>
                             <div className="flex flex-col">

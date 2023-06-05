@@ -29,7 +29,7 @@ export default function RootLayout({
                 <Link className='flex items-center' href="/"><AiFillHome className='mr-1' />Home</Link>
               </li>
               <li className='mr-4 hover:bg-slate-400 rounded-md p-1'>
-                <Link className='flex items-center' href="/taskManager"><GoTasklist className='mr-1' />Gerenciador</Link>
+                <Link className='flex items-center' href="/taskManager"><GoTasklist className='mr-1' />Task Manager</Link>
               </li>
               <li className='mr-4 hover:bg-slate-400 rounded-md p-1'><Link className='flex items-center' href="/login">
                 <IoLogInOutline className='mr-1' />Login</Link>
