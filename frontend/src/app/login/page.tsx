@@ -70,7 +70,7 @@ export default function Login() {
                                 </Link>
                             </div>
                             <div className=" flex items-center justify-center">
-                                <p className="text-sm">Dont hava a account? <Link className="inline-block align-baseline font-bold text-sm hover:text-green-700" href="/register">Sign Up</Link>
+                                <p className="text-sm">Don&apos;t hava a account? <Link className="inline-block align-baseline font-bold text-sm hover:text-green-700" href="/register">Sign Up</Link>
                                 </p>
                             </div>
                         </form>
