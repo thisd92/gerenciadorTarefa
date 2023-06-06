@@ -178,12 +178,12 @@ router.delete("/tasks/:id", async (req, res) => {
 
         if (task) {
             res.status(200).json({
-                message: "Usuário deletado com sucesso"
+                message: "Task deletada com sucesso"
             });
         } else {
             res.status(404).json({
                 error: true,
-                message: "Usuário não encontrado"
+                message: "Task não encontrada"
             });
         }
     } catch (error) {

@@ -1,6 +1,8 @@
 export interface Task{
     name: string,
     description: string,
-    isFinished: boolean,
+    toDo?: boolean,
+    isInProgress?: boolean,
+    isFinished?: boolean,
     _id: string
 }

@@ -9,13 +9,15 @@ import FormInput from "@/components/formInput/formInput";
 import LabelForm from "@/components/labelForm/labelForm";
 import SpanError from "@/components/spanError/spanError";
 import TaskList from '@/components/taskList/TaskList';
+import Kanban from '@/components/kanban/Kanban';
 
 export default function TaskManager() {
 
-    getTasks()
     const newTask: Task = {
         name: "",
         description: "",
+        toDo: true,
+        isInProgress: false,
         isFinished: false,
         _id: ""
     }
@@ -49,6 +51,7 @@ export default function TaskManager() {
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
         try {
+            setTask({...task, toDo: true, isInProgress: false, isFinished: false})
             setIsLoading(true);
             await axios.post(`${BASE_URL}/api/tasks`, task);
             resetValues()
@@ -69,7 +72,7 @@ export default function TaskManager() {
                     setTasks(t.data)
                 })
         } catch (error) {
-
+            
         }
     }
 
@@ -104,6 +107,7 @@ export default function TaskManager() {
                 </div>
             </section>
             <TaskList tasks={tasks}></TaskList>
+            <Kanban tasks={tasks}></Kanban>
         </main>
     )
 }
