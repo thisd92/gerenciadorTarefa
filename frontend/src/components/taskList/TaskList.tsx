@@ -86,7 +86,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks }) => {
                                             type="checkbox"
                                             name="toDo"
                                             checked={task.toDo}
-                                            onChange={() => handleCheckboxChange(task._id, "toDo")}
+                                            onChange={() => task._id && handleCheckboxChange(task._id, "toDo")}
                                             className="ml-2"
                                         />
                                     </div>
@@ -96,7 +96,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks }) => {
                                             type="checkbox"
                                             name="isInProgress"
                                             checked={task.isInProgress}
-                                            onChange={() => handleCheckboxChange(task._id, "isInProgress")}
+                                            onChange={() => task._id && handleCheckboxChange(task._id, "toDo")}
                                             className="ml-2"
                                         />
                                     </div>
@@ -106,7 +106,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks }) => {
                                             type="checkbox"
                                             name="isFinished"
                                             checked={task.isFinished}
-                                            onChange={() => handleCheckboxChange(task._id, "isFinished")}
+                                            onChange={() => task._id && handleCheckboxChange(task._id, "isFinished")}
                                             className="ml-2"
                                         />
                                     </div>

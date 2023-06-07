@@ -194,4 +194,24 @@ router.delete("/tasks/:id", async (req, res) => {
     }
 });
 
+router.get("/tasks/:id", async (req, res) => {
+    try {
+        const { params: { id }, body: task } = req;
+        const tarefa = await Task.findById(id)
+        if (tarefa) {
+            res.json(tarefa)
+        } else {
+            res.status(404).json({
+                error: true,
+                message: "Usuário não encontrado"
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            error: true,
+            message: "Erro no servidor"
+        });
+    }
+})
+
 module.exports = router
