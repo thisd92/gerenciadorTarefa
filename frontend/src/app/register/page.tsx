@@ -4,9 +4,9 @@ import axios from "axios";
 
 import { User, ValidatePass } from "./type";
 import { BASE_URL } from "../../../utils/request";
+import { FormButton } from "@/components/buttons/Buttons";
 import PhoneInput from "@/components/phoneInput/phoneInput";
 import FormInput from "@/components/formInput/formInput";
-import FormButton from "@/components/formButton/formButton";
 import LabelForm from "@/components/labelForm/labelForm";
 import SpanError from "@/components/spanError/spanError";
 

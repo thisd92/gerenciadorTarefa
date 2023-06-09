@@ -2,10 +2,10 @@
 import { useState } from "react";
 import axios from "axios";
 
-import { UserLogin } from "./type";
 import { BASE_URL } from "../../../utils/request";
+import { FormButton } from "@/components/buttons/Buttons";
+import { UserLogin } from "./type";
 import FormInput from "@/components/formInput/formInput";
-import FormButton from "@/components/formButton/formButton";
 import LabelForm from "@/components/labelForm/labelForm";
 import SpanError from "@/components/spanError/spanError";
 
