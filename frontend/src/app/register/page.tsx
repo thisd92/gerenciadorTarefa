@@ -17,7 +17,8 @@ export default function Register() {
         email: "",
         password: "",
         birth: "",
-        tel: ""
+        tel: "",
+        role: "user"
     }
 
     const confirmPass = {
@@ -78,7 +79,7 @@ export default function Register() {
     }
 
     return (
-        <main className="flex min-h-screen flex-col items-center mt-20">
+        <main className="flex flex-grow flex-col items-center mt-20">
             <section className="lg:w-3/12 md:w-2/6">
                 <div className="border-2 border-slate-300 rounded-md shadow-lg px-8 pt-6 pb-8 mb-4">
                     <header className="font-bold p-1">Create Account</header>

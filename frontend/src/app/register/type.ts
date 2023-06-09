@@ -3,7 +3,8 @@ export interface User {
     email: string,
     password: string,
     birth: string,
-    tel: string
+    tel: string,
+    role?: string
 }
 
 export interface ValidatePass {

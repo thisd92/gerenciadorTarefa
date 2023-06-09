@@ -123,6 +123,24 @@ router.post('/usersLogin', async (req, res) => {
     }
 });
 
+router.get('/usersLogin/:email', async (req, res) => {
+    try {
+        const { params: { email } } = req;
+        const user = await User.findOne({ email: email });
+
+        if (user) {
+            res.status(200).json(user);
+        } else {
+            res.status(400).send("Email inválido");
+        }
+    } catch (error) {
+        res.status(500).json({
+            error: true,
+            message: "Erro no servidor"
+        });
+    }
+});
+
 router.get("/tasks", (req, res) => {
     Task.find().then((task) => {
         return res.json(task);
