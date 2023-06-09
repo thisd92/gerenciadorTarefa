@@ -60,7 +60,7 @@ export default function TaskManager() {
     const [showMessage, setShowMessage] = useState(false);
 
     return (
-        <main className="flex min-h-screen flex-col items-center mt-8" >
+        <main className="flex flex-col flex-grow items-center mt-4 w-5/6" >
             <section className='w-1/6 mb-4'>
                 <div className='flex flex-row justify-around'>
                     <AddTaskBtn active={addTask} onClick={handleAddTask} />
