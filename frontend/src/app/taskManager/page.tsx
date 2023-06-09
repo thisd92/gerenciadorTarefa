@@ -1,69 +1,28 @@
 'use client'
 import axios from 'axios';
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
+import { AddTaskBtn, KanbanButton, ListButton } from '@/components/buttons/Buttons';
 import { BASE_URL } from '../../../utils/request';
 import { Task } from './type';
-import FormButton from "@/components/formButton/formButton";
-import FormInput from "@/components/formInput/formInput";
-import LabelForm from "@/components/labelForm/labelForm";
-import SpanError from "@/components/spanError/spanError";
 import Kanban from '../../components/kanban/Kanban';
 import TaskList from '../../components/taskList/TaskList';
+import AddTask from '@/components/addTaks/AddTask';
+import SpanError from '@/components/spanError/spanError';
+import SpanSuccess from '@/components/spanSuccess/spanSuccess';
 
 
 export default function TaskManager() {
 
-    const newTask: Task = {
-        name: "",
-        description: "",
-        toDo: true,
-        isInProgress: false,
-        isFinished: false,
-    }
-
     const [tasks, setTasks] = useState<Task[]>([])
-
-    const [task, setTask] = useState<Task>(newTask)
-    const [errorMsg, setErrorMsg] = useState("")
-    const [isLoading, setIsLoading] = useState(false)
-    const formRef = useRef<HTMLFormElement>(null)
+    const [errorMsg, setErrorMsg] = useState('')
+    const [list, setList] = useState(true)
+    const [kanban, setKanban] = useState(false)
+    const [addTask, setAddTask] = useState(false)
 
     useEffect(() => {
         getTasks();
     }, []);
-
-    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-        const { name, value } = e.target
-        setTask({ ...task, [name]: value })
-    }
-
-    function handleTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-        const { name, value } = e.target
-        setTask({ ...task, [name]: value })
-    }
-
-    function resetValues() {
-        setTask(newTask)
-        if (formRef.current) formRef.current.reset()
-    }
-
-    async function handleSubmit(e: React.FormEvent) {
-        e.preventDefault()
-        try {
-            setIsLoading(true);
-            await axios.post(`${BASE_URL}/api/tasks`, task);
-            resetValues()
-            alert("Task saved")
-            getTasks()
-        } catch (error) {
-            setErrorMsg("erro")
-            setTimeout(() => setErrorMsg(""), 2000)
-            console.log(error)
-        } finally {
-            setIsLoading(false);
-        };
-    }
 
     async function getTasks() {
         try {
@@ -72,42 +31,48 @@ export default function TaskManager() {
                     setTasks(t.data)
                 })
         } catch (error) {
-
+            console.log('Erro ao obter as tarefas:', error);
+            setErrorMsg('Não foi possível recuperar a lista de tarefas!')
         }
     }
 
+    const handleAddTask = () => {
+        setAddTask(!addTask);
+    };
+
+    const handleListClick = () => {
+        setList(!list);
+        setKanban(false);
+    };
+
+    const handleKanbanClick = () => {
+        setKanban(!kanban);
+        setList(false);
+    };
+
+    const addTaskToList = () => {
+        setShowMessage(true);
+        setTimeout(() => {
+            setShowMessage(false);
+        }, 3000);
+    };
+
+    const [showMessage, setShowMessage] = useState(false);
+
     return (
-        <main className="flex min-h-screen flex-col items-center mt-20">
-            <section>
-                <div className="border-2 border-slate-300 rounded-md shadow-lg px-8 pt-6 pb-8 mb-4">
-                    <header className="font-bold p-1">
-                        <div>
-                            <h1>Task Manager</h1>
-                        </div>
-                    </header>
-                    <div className="flex flex-col mt-4">
-                        <div>
-                            <h2>Add Taks</h2>
-                        </div>
-                        <form ref={formRef} className="flex flex-col gap-2" onSubmit={handleSubmit}>
-                            <div className="flex flex-col">
-                                <LabelForm htmlFor="name">Task Name</LabelForm>
-                                <FormInput type="text" name="name" id="name" onChange={handleChange} />
-                            </div>
-                            <div className="flex flex-col">
-                                <LabelForm htmlFor="description">Description</LabelForm>
-                                <textarea name="description" id="description" onChange={handleTextChange} />
-                                <SpanError>{errorMsg}</SpanError>
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <FormButton type="submit" disabled={isLoading}>{isLoading ? "Adding" : "Add"}</FormButton>
-                            </div>
-                        </form>
-                    </div>
+        <main className="flex min-h-screen flex-col items-center mt-8" >
+            <section className='w-1/6 mb-4'>
+                <div className='flex flex-row justify-around'>
+                    <AddTaskBtn active={addTask} onClick={handleAddTask} />
+                    <ListButton active={list} onClick={handleListClick} />
+                    <KanbanButton active={kanban} onClick={handleKanbanClick} />
+                    <SpanError>{errorMsg}</SpanError>
                 </div>
+                {showMessage && <SpanSuccess>Tarefa adicionada com sucesso</SpanSuccess>}
+                {addTask && <AddTask addTaskToList={addTaskToList} getTasks={getTasks} handleAddTask={handleAddTask} />}
             </section>
-            <TaskList tasks={tasks}></TaskList>
-            <Kanban tasks={tasks}></Kanban>
+            {list && <TaskList tasks={tasks} />}
+            {kanban && <Kanban getTasks={getTasks} tasks={tasks} />}
         </main>
     )
 }
