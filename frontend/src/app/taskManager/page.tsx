@@ -7,7 +7,7 @@ import { BASE_URL } from '../../../utils/request';
 import { Task } from './type';
 import Kanban from '../../components/kanban/Kanban';
 import TaskList from '../../components/taskList/TaskList';
-import AddTask from '@/components/addTaks/AddTask';
+import AddTask from '@/components/addTask/AddTask';
 import SpanError from '@/components/spanError/spanError';
 import SpanSuccess from '@/components/spanSuccess/spanSuccess';
 
