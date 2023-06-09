@@ -7,9 +7,10 @@ import TaskItem from '../taskItem/TaskItem';
 
 interface TaskListProps {
     tasks: Task[];
+    getTasks: () => void
 }
 
-const TaskList: React.FC<TaskListProps> = ({ tasks }) => {
+const TaskList: React.FC<TaskListProps> = ({ tasks, getTasks }) => {
     const [taskList, setTaskList] = useState<Task[]>([]);
     const [expandedTasks, setExpandedTasks] = useState<string[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -122,6 +123,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks }) => {
                                 expanded={expandedTasks.includes(task._id ?? '')}
                                 onToggleExpand={toggleExpandTask}
                                 onCheckboxChange={handleCheckboxChange}
+                                getTasks={getTasks}
                             />
                         ))}
                     </ul>

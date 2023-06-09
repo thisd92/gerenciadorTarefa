@@ -1,6 +1,6 @@
 import { BsKanban, BsListCheck } from 'react-icons/bs'
 import { FormButtonProps } from './type';
-import { MdOutlineAdd } from 'react-icons/md';
+import { MdDeleteForever, MdEdit, MdOutlineAdd } from 'react-icons/md';
 
 const size = 30
 
@@ -19,6 +19,27 @@ const AddTaskBtn = ({ active, onClick }: any) => {
             onClick={onClick}
         >
             <MdOutlineAdd size={size} />
+        </button >
+    )
+}
+
+const EditTaskBtn = ({ active, onClick }: any) => {
+    return (
+        <button
+            className={`p-1 rounded-md border-2 border-gray-400 ${active ? 'bg-gray-400' : 'bg-gray-300'}`} onClick={onClick}
+        >
+            <MdEdit size={16} color='yellow' />
+        </button >
+    )
+}
+
+const DeleteTaskBtn = ({ active, onClick }: any) => {
+    return (
+        <button
+            className={`ml-1 p-1 rounded-md border-2 border-gray-400 ${active ? 'bg-gray-400' : 'bg-gray-300'}`}
+            onClick={onClick}
+        >
+            <MdDeleteForever size={16} color='red' />
         </button >
     )
 }
@@ -45,4 +66,4 @@ const KanbanButton = ({ active, onClick }: any) => {
     );
 };
 
-export { AddTaskBtn, FormButton, ListButton, KanbanButton };
+export { AddTaskBtn, FormButton, ListButton, KanbanButton, EditTaskBtn, DeleteTaskBtn };

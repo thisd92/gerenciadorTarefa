@@ -71,7 +71,7 @@ export default function TaskManager() {
                 {showMessage && <SpanSuccess>Tarefa adicionada com sucesso</SpanSuccess>}
                 {addTask && <AddTask addTaskToList={addTaskToList} getTasks={getTasks} handleAddTask={handleAddTask} />}
             </section>
-            {list && <TaskList tasks={tasks} />}
+            {list && <TaskList tasks={tasks} getTasks={getTasks} />}
             {kanban && <Kanban getTasks={getTasks} tasks={tasks} />}
         </main>
     )
