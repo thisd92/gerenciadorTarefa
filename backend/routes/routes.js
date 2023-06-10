@@ -14,7 +14,7 @@ router.post('/user', async (req, res) => {
     const newUser = new User(req.body)
     newUser.save()
         .then((newUser) => {
-            res.status(200)
+            res.status(201)
             return res.json(newUser)
         }).catch((erro) => {
             res.status(400)
@@ -156,7 +156,7 @@ router.post('/tasks', async (req, res) => {
     const newTask = new Task(req.body)
     newTask.save()
         .then((task) => {
-            res.status(200)
+            res.status(201)
             return res.json(task)
         }).catch((erro) => {
             res.status(400)
