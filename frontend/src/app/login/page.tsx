@@ -33,7 +33,7 @@ export default function Login() {
         e.preventDefault()
         try {
             setIsLoading(true);
-            const response = await axios.post(`${BASE_URL}/api/usersLogin`, userLogin);
+            const response = await axios.post(`${BASE_URL}/api/usersLogin`, userLogin, {withCredentials: true});
             if (response.status === 200) {
                 const email = userLogin.email
                 const user = (await axios.get(`${BASE_URL}/api/usersLogin/${email}`)).data
