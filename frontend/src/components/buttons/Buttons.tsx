@@ -15,7 +15,7 @@ const FormButton = (props: FormButtonProps) => {
 const AddTaskBtn = ({ active, onClick }: any) => {
     return (
         <button
-            className={`${active ? 'bg-gray-400' : 'bg-gray-300'} p-1 rounded-md border-2 border-gray-400`}
+            className={`${active ? 'bg-gray-400' : 'bg-gray-300'} p-1 rounded-md shadow-md`}
             onClick={onClick}
         >
             <MdOutlineAdd size={size} />
@@ -26,7 +26,7 @@ const AddTaskBtn = ({ active, onClick }: any) => {
 const EditTaskBtn = ({ active, onClick }: {active: any, onClick: () => void}) => {
     return (
         <button
-            className={`p-1 rounded-md border-2 border-gray-400 ${active ? 'bg-gray-400' : 'bg-gray-300'}`}
+            className={`p-1 rounded-md shadow-lg ${active ? 'bg-gray-400' : 'bg-gray-300'}`}
             onClick={onClick}
         >
             <MdEdit size={16} color='yellow' />
@@ -37,7 +37,7 @@ const EditTaskBtn = ({ active, onClick }: {active: any, onClick: () => void}) =>
 const DeleteTaskBtn = ({ active, onClick }: any) => {
     return (
         <button
-            className={`ml-1 p-1 rounded-md border-2 border-gray-400 ${active ? 'bg-gray-400' : 'bg-gray-300'}`}
+            className={`ml-1 p-1 rounded-md shadow-lg ${active ? 'bg-gray-400' : 'bg-gray-300'}`}
             onClick={onClick}
         >
             <MdDeleteForever size={16} color='red' />
@@ -48,7 +48,7 @@ const DeleteTaskBtn = ({ active, onClick }: any) => {
 const ListButton = ({ active, onClick }: any) => {
     return (
         <button
-            className={`p-1 rounded-md border-2 border-gray-400 ${active ? 'bg-gray-400' : 'bg-gray-300'}`}
+            className={`p-1 rounded-md shadow-md ${active ? 'bg-gray-400' : 'bg-gray-300'}`}
             onClick={onClick}
         >
             <BsListCheck size={size} />
@@ -59,7 +59,7 @@ const ListButton = ({ active, onClick }: any) => {
 const KanbanButton = ({ active, onClick }: any) => {
     return (
         <button
-            className={`p-1 rounded-md border-2 border-gray-400 ${active ? 'bg-gray-400' : 'bg-gray-300'}`}
+            className={`p-1 rounded-md shadow-md ${active ? 'bg-gray-400' : 'bg-gray-300'}`}
             onClick={onClick}
         >
             <BsKanban size={size} />
