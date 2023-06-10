@@ -23,10 +23,11 @@ const AddTaskBtn = ({ active, onClick }: any) => {
     )
 }
 
-const EditTaskBtn = ({ active, onClick }: any) => {
+const EditTaskBtn = ({ active, onClick }: {active: any, onClick: () => void}) => {
     return (
         <button
-            className={`p-1 rounded-md border-2 border-gray-400 ${active ? 'bg-gray-400' : 'bg-gray-300'}`} onClick={onClick}
+            className={`p-1 rounded-md border-2 border-gray-400 ${active ? 'bg-gray-400' : 'bg-gray-300'}`}
+            onClick={onClick}
         >
             <MdEdit size={16} color='yellow' />
         </button >
