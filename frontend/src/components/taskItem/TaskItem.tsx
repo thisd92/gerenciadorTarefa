@@ -2,7 +2,7 @@ import { Task } from "@/app/taskManager/type";
 import { DeleteTaskBtn, EditTaskBtn } from "../buttons/Buttons";
 import { useState } from "react";
 import axios from "axios";
-import { BASE_URL } from "../../../utils/request";
+import { BASE_URL } from "../../utils/request";
 import EditTask from "../editTask/EditTask";
 
 interface TaskItemProps {

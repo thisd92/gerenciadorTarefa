@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import axios from "axios";
 
 import { User, ValidatePass } from "./type";
-import { BASE_URL } from "../../../utils/request";
+import { BASE_URL } from "../../utils/request";
 import { FormButton } from "@/components/buttons/Buttons";
 import PhoneInput from "@/components/phoneInput/phoneInput";
 import FormInput from "@/components/formInput/formInput";

@@ -4,7 +4,7 @@ import ProfileUser from "@/components/profileUser/profileUser"
 import axios from "axios"
 
 import { useEffect, useState } from "react"
-import { BASE_URL } from "../../../../utils/request"
+import { BASE_URL } from "../../../utils/request"
 
 interface UserProps {
     params: {

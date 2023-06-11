@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 
-import { BASE_URL } from '../../../utils/request';
+import { BASE_URL } from '../../utils/request';
 import { Task } from '@/app/taskManager/type';
 import TaskItem from '../taskItem/TaskItem';
 

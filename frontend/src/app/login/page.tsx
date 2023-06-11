@@ -2,7 +2,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-import { BASE_URL } from "../../../utils/request";
+import { BASE_URL } from "../../utils/request";
 import { FormButton } from "@/components/buttons/Buttons";
 import { UserLogin } from "./type";
 import FormInput from "@/components/formInput/formInput";
@@ -35,10 +35,7 @@ export default function Login() {
             setIsLoading(true);
             const response = await axios.post(`${BASE_URL}/api/usersLogin`, userLogin, {withCredentials: true});
             if (response.status === 200) {
-                const email = userLogin.email
-                const user = (await axios.get(`${BASE_URL}/api/usersLogin/${email}`)).data
-                const id = user._id
-                router.push(`/profile/${id}`)
+                router.push(`/`)
             }
         } catch (error) {
             setErrorMsg("Invalid Email or Password")

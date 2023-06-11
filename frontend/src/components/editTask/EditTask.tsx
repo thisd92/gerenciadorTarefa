@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { AiOutlineCloseSquare } from "react-icons/ai"
 import { MdEdit } from "react-icons/md";
 
-import { BASE_URL } from "../../../utils/request";
+import { BASE_URL } from "../../utils/request";
 import { Task } from "@/app/taskManager/type";
 import { FormButton } from "../buttons/Buttons";
 import FormInput from "../formInput/formInput";

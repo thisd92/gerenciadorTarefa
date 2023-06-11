@@ -3,7 +3,7 @@ import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautif
 import axios from 'axios';
 
 import { Task } from '@/app/taskManager/type';
-import { BASE_URL } from '../../../utils/request';
+import { BASE_URL } from '../../utils/request';
 
 interface KanbanProps {
     tasks: Task[];

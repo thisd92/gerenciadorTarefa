@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react'
 
 import { AddTaskBtn, KanbanButton, ListButton } from '@/components/buttons/Buttons';
-import { BASE_URL } from '../../../utils/request';
+import { BASE_URL } from '../../utils/request';
 import { Task } from './type';
 import Kanban from '../../components/kanban/Kanban';
 import TaskList from '../../components/taskList/TaskList';
