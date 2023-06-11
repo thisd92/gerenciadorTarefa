@@ -1,32 +1,14 @@
 'use client'
-import axios from 'axios';
-import { getCookie } from 'cookies-next'
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { BASE_URL } from '../../utils/request';
+import { validateToken } from '@/services/validateToken';
 
 export default function Home() {
   const router = useRouter()
 
-  const validarToken = async () => {
-    try {
-      const token = getCookie('authorization', {})
-
-      if (!token) throw new Error("Token Inválido!")
-      await axios.get(`${BASE_URL}/api/home`, {
-        headers: {
-          Authorization: `${token}` // Envia o token no header Authorization
-        },
-      });
-    } catch (error) {
-      const token = getCookie('authorization', {})
-      router.push('/');
-    }
-  };
-
   useEffect(() => {
+    validateToken({router});
 
-    validarToken();
   }, []);
 
   return (

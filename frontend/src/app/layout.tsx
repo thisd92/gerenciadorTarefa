@@ -2,6 +2,9 @@
 import './globals.css'
 import Footer from '@/components/footer/Footer'
 import { Header } from '@/components/header/header'
+import { validateToken } from '@/services/validateToken'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export const metadata = {
   title: 'Gerenciador de Tarefas',
@@ -13,10 +16,32 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+
+  const router = useRouter()
+  const [isLogged, setIsLogged] = useState(false)
+
+  const validateLogin = async () => {
+    try {
+      await validateToken({ router })
+      setIsLogged(true)
+    } catch (error) {
+      setIsLogged(false)
+    }
+  }
+
+  const handleLogout = () => {
+    setIsLogged(false)
+  }
+
+  useEffect(() => {
+    validateLogin()
+    console.log(isLogged)
+  }, [])
+
   return (
     <html lang="en">
       <body className="min-h-screen w-full flex flex-col items-center">
-        <Header />
+        <Header isLogged={isLogged} onLogout={handleLogout} router={router} />
         {children}
         <Footer />
       </body>
