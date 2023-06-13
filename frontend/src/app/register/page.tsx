@@ -5,7 +5,7 @@ import axios from "axios";
 import { User, ValidatePass } from "./type";
 import { BASE_URL } from "../../utils/request";
 import { FormButton } from "@/components/buttons/Buttons";
-import PhoneInput from "@/components/phoneInput/phoneInput";
+import PhoneInput from "@/components/PhoneInput/phoneInput";
 import FormInput from "@/components/formInput/formInput";
 import LabelForm from "@/components/labelForm/labelForm";
 import SpanError from "@/components/spanError/spanError";
@@ -79,8 +79,8 @@ export default function Register() {
     }
 
     return (
-        <main className="flex flex-grow flex-col items-center mt-20">
-            <section className="lg:w-3/12 md:w-2/6">
+        <main className="flex flex-grow flex-col items-center mt-8">
+            <section>
                 <div className="border-2 border-slate-300 rounded-md shadow-lg px-8 pt-6 pb-8 mb-4">
                     <header className="font-bold p-1">Create Account</header>
                     <div className="flex flex-col mt-4">
