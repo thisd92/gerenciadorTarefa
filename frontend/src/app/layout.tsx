@@ -22,13 +22,21 @@ export default function RootLayout({
 
   const validateLogin = async () => {
     try {
-      await validateToken({ router })
-      setIsLogged(true)
+      await validateToken({
+        router,
+        onLoginSuccess: handleLogin
+      })
+      console.log("Token Válido")
     } catch (error) {
       setIsLogged(false)
+      console.log("Token Inválido")
     }
   }
 
+  const handleLogin = () => {
+    setIsLogged(true);
+  };
+  
   const handleLogout = () => {
     setIsLogged(false)
   }
@@ -36,7 +44,7 @@ export default function RootLayout({
   useEffect(() => {
     validateLogin()
     console.log(isLogged)
-  }, [])
+  }, [router])
 
   return (
     <html lang="en">

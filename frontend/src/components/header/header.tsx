@@ -14,7 +14,6 @@ interface HeaderProps {
 }
 
 export function Header({ isLogged, router, onLogout }: HeaderProps) {
-    console.log('isLogged:', isLogged);
 
     return (
         <header className="w-full">
@@ -27,10 +26,12 @@ export function Header({ isLogged, router, onLogout }: HeaderProps) {
                         <Link className='flex items-center' href="/taskManager"><GoTasklist className='mr-1' />Task Manager</Link>
                     </li>
                     <li className='mr-4 hover:bg-slate-400 rounded-md p-1'>
-                        {isLogged && <ProfileButton onLogout={onLogout} router={router} />}
-                        {!isLogged && <Link className='flex items-center' href="/login">
-                            <IoLogInOutline className='mr-1' />Login
-                        </Link>}
+                        {
+                            isLogged ? <ProfileButton onLogout={onLogout} router={router} /> :
+                                <Link className='flex items-center' href="/login">
+                                    <IoLogInOutline className='mr-1' />Login
+                                </Link>
+                        }
                     </li>
                 </ul>
             </nav>

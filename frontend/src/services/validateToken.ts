@@ -4,10 +4,11 @@ import { getCookie } from "cookies-next";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 
 interface ValidateProps{
-    router: AppRouterInstance
+    router: AppRouterInstance;
+    onLoginSuccess: () => void
 }
 
-export const validateToken = async ( {router}: ValidateProps) => {
+export const validateToken = async ( {router, onLoginSuccess}: ValidateProps) => {
     try {
         const token = getCookie('authorization', {})
 
@@ -17,6 +18,7 @@ export const validateToken = async ( {router}: ValidateProps) => {
                 Authorization: `${token}` // Envia o token no header Authorization
             },
         });
+        onLoginSuccess()
     } catch (error) {
         router.push('/login');
     }

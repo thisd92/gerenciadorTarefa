@@ -13,11 +13,6 @@ export default function ProfileButton({ router, onLogout }: ProfileButtonProps) 
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-    // const email = userLogin.email
-    // const user = (await axios.get(`${BASE_URL}/api/usersLogin/${email}`)).data
-    // const id = user._id
-    // router.push(`/profile/${id}`)
-
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
     };
