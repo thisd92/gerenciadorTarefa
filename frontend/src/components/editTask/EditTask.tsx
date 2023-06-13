@@ -10,6 +10,7 @@ import { FormButton } from "../buttons/Buttons";
 import FormInput from "../formInput/formInput";
 import LabelForm from "../labelForm/labelForm";
 import SpanError from "../spanError/spanError";
+import { getToken } from "@/services/auth";
 
 export default function EditTask(
     { getTasks, handleEditTask, taskId }: {
@@ -36,7 +37,11 @@ export default function EditTask(
     },[])
 
     async function getTask() {
-        const response = await axios.get(`${BASE_URL}/api/tasks/${taskId}`)
+        const response = await axios.get(`${BASE_URL}/api/tasks/${taskId}`, {
+            headers: {
+                Authorization: `${getToken()}`
+            }
+        })
         setTask(response.data)
     }
 
@@ -115,7 +120,7 @@ return (
                             <form ref={formRef} className="flex flex-col gap-2" onSubmit={handleSubmit}>
                                 <div className="flex flex-col">
                                     <LabelForm htmlFor="name">Task Name</LabelForm>
-                                    <FormInput type="text" value={task.name} name="name" id="name" onChange={handleChange} />
+                                    <FormInput type="text" readOnly={true} value={task.name} name="name" id="name" onChange={handleChange} />
                                 </div>
                                 <div className="flex flex-col">
                                     <LabelForm htmlFor="description">Description</LabelForm>

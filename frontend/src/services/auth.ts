@@ -41,3 +41,12 @@ export const authToken = async ( {router}: AuthProps) => {
         router.push('/login');
     }
 };
+
+export const getToken = () => {
+    try {
+        const token = getCookie('authorization')
+        return token
+    } catch (error) {
+        console.log(error)
+    }
+}
