@@ -5,7 +5,7 @@ import axios from "axios";
 import { User, ValidatePass } from "./type";
 import { BASE_URL } from "../../utils/request";
 import { FormButton } from "@/components/buttons/Buttons";
-import PhoneInput from "@/components/PhoneInput/phoneInput";
+import PhoneInput from "@/components/phoneInput/phoneInput";
 import FormInput from "@/components/formInput/formInput";
 import LabelForm from "@/components/labelForm/labelForm";
 import SpanError from "@/components/spanError/spanError";
@@ -15,6 +15,7 @@ export default function Register() {
     const newUser = {
         name: "",
         email: "",
+        companyName: "",
         password: "",
         birth: "",
         tel: "",
@@ -69,7 +70,7 @@ export default function Register() {
             try {
                 await axios.post(`${BASE_URL}/api/user`, user);
                 resetValues()
-                alert("Conta Cadastrada")
+                alert("User Created")
             } catch (error) {
                 setErrorEmailMsg("Email is already in use")
                 setTimeout(() => setErrorEmailMsg(""), 2000)
@@ -84,30 +85,34 @@ export default function Register() {
                 <div className="border-2 border-slate-300 rounded-md shadow-lg px-8 pt-6 pb-8 mb-4">
                     <header className="font-bold p-1">Create Account</header>
                     <div className="flex flex-col mt-4">
-                        <form ref={formRef} className="flex flex-col gap-3" onSubmit={handleSubmit}>
-                            <div className="">
+                        <form ref={formRef} className="flex flex-col gap-2" onSubmit={handleSubmit}>
+                            <div>
                                 <LabelForm htmlFor="name">Name</LabelForm>
                                 <FormInput type="text" name="name" id="name" onChange={handleChange} required />
                             </div>
-                            <div className="">
+                            <div className="flex flex-col">
                                 <LabelForm htmlFor="email">E-mail</LabelForm>
                                 <FormInput type="email" name="email" id="email" onChange={handleChange} required />
                                 <SpanError>{errorEmailMsg}</SpanError>
                             </div>
-                            <div className="">
+                            <div>
+                                <LabelForm htmlFor="companyName">Company Name</LabelForm>
+                                <FormInput type="text" name="companyName" id="companyName" onChange={handleChange} required />
+                            </div>
+                            <div>
                                 <LabelForm htmlFor="password">Password</LabelForm>
                                 <FormInput type="password" name="password" id="password" onChange={handleChange} onBlur={handleChange} required />
                             </div>
-                            <div className="">
+                            <div className="flex flex-col">
                                 <LabelForm htmlFor="confirmPassword">Confirm Password</LabelForm>
                                 <FormInput type="password" name="confirmPassword" id="confirmPassword" onChange={handleConfirm} onBlur={verifyPass} required />
                                 <SpanError>{errorMsg}</SpanError>
                             </div>
-                            <div className="">
+                            <div>
                                 <LabelForm htmlFor="birth">Birth</LabelForm>
                                 <FormInput type="date" name="birth" id="birth" onChange={handleChange} required />
                             </div>
-                            <div className="">
+                            <div>
                                 <LabelForm htmlFor="tel">Tel</LabelForm>
                                 <PhoneInput name="tel" id="tel" value={user.tel} onChange={handleTel} type="tel" required />
                             </div>

@@ -4,5 +4,6 @@ export interface Task{
     toDo?: boolean,
     isInProgress?: boolean,
     isFinished?: boolean,
-    _id?: string
+    _id?: string,
+    createdBy?: string
 }

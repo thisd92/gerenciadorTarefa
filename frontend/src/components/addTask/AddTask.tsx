@@ -10,6 +10,7 @@ import { FormButton } from "../buttons/Buttons";
 import FormInput from "../formInput/formInput";
 import LabelForm from "../labelForm/labelForm";
 import SpanError from "../spanError/spanError";
+import { getCookie } from "cookies-next";
 
 export default function AddTask(
     { getTasks, handleAddTask, addTaskToList }: {
@@ -45,7 +46,12 @@ export default function AddTask(
         e.preventDefault()
         try {
             setIsLoading(true);
-            await axios.post(`${BASE_URL}/api/tasks`, task);
+            const token = getCookie('authorization')
+            await axios.post(`${BASE_URL}/api/tasks`, task, {
+                headers:{
+                    Authorization: `${token}`
+                } 
+            });
             resetValues()
             getTasks()
             handleAddTask()
@@ -73,7 +79,7 @@ export default function AddTask(
                             <div className="flex flex-col mt-4">
                                 <header className="flex flex-row items-center mb-4 font-bold">
                                     <MdAddTask className="mr-1" size={20} />
-                                    <h1>Add Task</h1>
+                                    <h1>Add New Task</h1>
                                     <button className="ml-auto text-gray-500 hover:text-gray-700" onClick={handleAddTask}>
                                         <AiOutlineCloseSquare size={20} />
                                     </button>

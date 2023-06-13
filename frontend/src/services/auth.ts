@@ -8,17 +8,35 @@ interface ValidateProps{
     onLoginSuccess: () => void
 }
 
+interface AuthProps{
+    router: AppRouterInstance;
+}
+
 export const validateToken = async ( {router, onLoginSuccess}: ValidateProps) => {
     try {
         const token = getCookie('authorization', {})
 
         if (!token) throw new Error("Token Inválido!")
-        await axios.get(`${BASE_URL}/api/home`, {
+        await axios.get(`${BASE_URL}/api/protected`, {
             headers: {
                 Authorization: `${token}` // Envia o token no header Authorization
             },
         });
         onLoginSuccess()
+    } catch (error) {
+        router.push('/login');
+    }
+};
+export const authToken = async ( {router}: AuthProps) => {
+    try {
+        const token = getCookie('authorization', {})
+
+        if (!token) throw new Error("Token Inválido!")
+        await axios.get(`${BASE_URL}/api/protected`, {
+            headers: {
+                Authorization: `${token}` // Envia o token no header Authorization
+            },
+        });
     } catch (error) {
         router.push('/login');
     }

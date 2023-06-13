@@ -4,11 +4,11 @@ import ProfileUser from "@/components/profileUser/profileUser"
 import axios from "axios"
 
 import { useEffect, useState } from "react"
-import { BASE_URL } from "../../../utils/request"
+import { BASE_URL } from "../../utils/request"
 
 interface UserProps {
     params: {
-        id: string
+        name: string
     }
 }
 
@@ -25,7 +25,7 @@ export default function Profile({ params }: UserProps) {
 
     async function handleRole() {
         try {
-            const response = await axios.get(`${BASE_URL}/api/user/${params.id}`)
+            const response = await axios.get(`${BASE_URL}/api/user/${params.name}`)
             const role = response.data.role
             if (role === "user") {
                 setUser(true)

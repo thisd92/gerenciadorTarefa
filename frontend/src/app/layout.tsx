@@ -2,7 +2,7 @@
 import './globals.css'
 import Footer from '@/components/footer/Footer'
 import { Header } from '@/components/header/header'
-import { validateToken } from '@/services/validateToken'
+import { validateToken } from '@/services/auth'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 

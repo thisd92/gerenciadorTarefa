@@ -10,7 +10,9 @@ import TaskList from '../../components/taskList/TaskList';
 import AddTask from '@/components/addTask/AddTask';
 import SpanError from '@/components/spanError/spanError';
 import SpanSuccess from '@/components/spanSuccess/spanSuccess';
-
+import { authToken, validateToken } from '@/services/auth';
+import { useRouter } from 'next/navigation';
+import { getCookie } from 'cookies-next';
 
 export default function TaskManager() {
 
@@ -20,16 +22,22 @@ export default function TaskManager() {
     const [kanban, setKanban] = useState(false)
     const [addTask, setAddTask] = useState(false)
 
+    const router = useRouter()
+
     useEffect(() => {
         getTasks();
+        authToken({ router })
     }, []);
 
     async function getTasks() {
         try {
-            await axios.get(`${BASE_URL}/api/tasks`)
-                .then((t) => {
-                    setTasks(t.data)
-                })
+            const token = getCookie('authorization')
+            const response = await axios.get(`${BASE_URL}/api/tasks`, {
+                headers: {
+                    Authorization: `${token}`
+                }
+            })
+            setTasks(response.data)
         } catch (error) {
             console.log('Erro ao obter as tarefas:', error);
             setErrorMsg('Não foi possível recuperar a lista de tarefas!')
@@ -66,11 +74,11 @@ export default function TaskManager() {
                     <AddTaskBtn active={addTask} onClick={handleAddTask} />
                     <ListButton active={list} onClick={handleListClick} />
                     <KanbanButton active={kanban} onClick={handleKanbanClick} />
-                    <SpanError>{errorMsg}</SpanError>
                 </div>
                 {showMessage && <SpanSuccess>Tarefa adicionada com sucesso</SpanSuccess>}
                 {addTask && <AddTask addTaskToList={addTaskToList} getTasks={getTasks} handleAddTask={handleAddTask} />}
             </section>
+            <SpanError>{errorMsg}</SpanError>
             {list && <TaskList tasks={tasks} getTasks={getTasks} />}
             {kanban && <Kanban getTasks={getTasks} tasks={tasks} />}
         </main>

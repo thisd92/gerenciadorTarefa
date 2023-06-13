@@ -6,9 +6,10 @@ const userSchema = new mongoose.Schema({
     password: { type: String },
     birth: { type: String },
     tel: { type: String },
-    role: { type: String, enum: ['admin', 'user'], default: 'user' }
+    role: { type: String, enum: ['admin', 'user'], default: 'user' },
+    company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company' }
 })
 
-const User = mongoose.model('users', userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

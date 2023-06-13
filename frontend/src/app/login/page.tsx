@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 
 export default function Login() {
     const newUserLogin = {
+        companyName: "",
         email: "",
         password: ""
     }
@@ -44,7 +45,6 @@ export default function Login() {
         } finally {
             setIsLoading(false);
         };
-        console.log(userLogin)
     }
 
     return (
@@ -54,6 +54,10 @@ export default function Login() {
                     <header className="font-bold p-1">Login</header>
                     <div className="flex flex-col mt-4">
                         <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
+                            <div className="flex flex-col">
+                                <LabelForm htmlFor="companyName">Company Name</LabelForm>
+                                <FormInput type="text" name="companyName" id="companyName" onChange={handleChange} />
+                            </div>
                             <div className="flex flex-col">
                                 <LabelForm htmlFor="email">E-mail</LabelForm>
                                 <FormInput type="email" name="email" id="email" onChange={handleChange} />

@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser')
 
 const User = require('../models/user')
 const Task = require('../models/task');
+const Company = require('../models/company');
 
 require('dotenv').config()
 
@@ -23,7 +24,7 @@ router.use(cors({
 router.use(cookieParser())
 
 function createToken(user) {
-    return jwt.sign({ email: user.email, name: user.name }, SECRET)
+    return jwt.sign({ company: user.company, email: user.email, name: user.name }, SECRET)
 }
 
 function readToken(token) {
@@ -55,13 +56,47 @@ function errorHandler(err, req, res, next) {
     res.status(500).json({ error: true, message: 'Erro no servidor' });
 }
 
-router.get('/home', authenticate, (req, res) => {
+router.get('/protected', authenticate, (req, res) => {
     res.json({ mensagem: 'Bem-vindo à página protegida!' });
+});
+
+router.post('/company', async (req, res) => {
+    try {
+        const company = new Company(req.body);
+        await company.save();
+        res.status(201).json(company);
+    } catch (error) {
+        if (error.code === 11000) {
+            return res.status(400).json({
+                error: true,
+                message: "Companhia já cadastrada."
+            });
+        }
+        res.status(500).json({ error: error.message });
+    }
+})
+
+router.get("/company", async (req, res, next) => {
+    try {
+        const companys = await Company.find()
+        res.json(companys);
+    } catch {
+        next(error)
+    }
 });
 
 router.post('/user', async (req, res) => {
     try {
+        const companyName = req.body.companyName;
+        const company = await Company.findOne({ name: companyName }); // Corrigido para usar a variável companyName
+        if (!company) {
+            return res.status(400).json({
+                error: true,
+                message: "Empresa não encontrada.",
+            });
+        }
         const user = new User(req.body);
+        user.company = String(company._id); // Corrigido para atribuir o _id da empresa ao usuário
         const hashedPassword = await bcrypt.hash(user.password, 10);
         user.password = hashedPassword;
         await user.save();
@@ -75,7 +110,7 @@ router.post('/user', async (req, res) => {
         }
         res.status(500).json({ error: error.message });
     }
-})
+});
 
 router.get("/user", async (req, res, next) => {
     try {
@@ -142,25 +177,38 @@ router.delete("/user/:id", async (req, res, next) => {
 router.post('/usersLogin', async (req, res, next) => {
     try {
         const { body: userLogin } = req;
+        const company = await Company.findOne({ name: userLogin.companyName });
+        if (!company) {
+            return res.status(401).json({ message: 'Empresa inválida' });
+        }
+
         const user = await User.findOne({ email: userLogin.email });
+
         if (!user) {
-            return res.status(401).json({ message: 'Email ou senha inválidos' })
+            return res.status(401).json({ message: 'Email ou senha inválidos' });
         }
 
-        const isPasswordValid = await bcrypt.compare(userLogin.password, user.password)
+        const isPasswordValid = await bcrypt.compare(userLogin.password, user.password);
+
         if (!isPasswordValid) {
-            return res.status(401).json({ message: 'Email ou senha inválidos' })
+            return res.status(401).json({ message: 'Email ou senha inválidos' });
         }
 
-        const token = createToken(user)
+        if (String(company._id) !== String(user.company)) {
+            return res.status(401).json({ message: 'Empresa inválida' });
+        }
+
+        const token = createToken(user);
+
         res.status(200)
             .cookie('authorization', token, {
                 httpOnly: false,
                 secure: true,
                 sameSite: 'strict'
-            }).json(token)
+            })
+            .json(token);
     } catch (error) {
-        next(error)
+        next(error);
     }
 });
 
@@ -178,27 +226,40 @@ router.get('/usersLogin/:email', async (req, res, next) => {
     }
 });
 
-router.get("/tasks", async (req, res, next) => {
+router.get("/tasks", authenticate, async (req, res, next) => {
     try {
-        const tasks = await Task.find()
+        const token = req.headers.authorization
+        const decodedToken = readToken(token)
+        const { company, email, name } = decodedToken
+        const tasks = await Task.find({ createdBy: company }); // Filtra as tarefas pelo ID do usuário
         res.status(200).json(tasks);
     } catch (error) {
-        next(error)
+        next(error);
     }
 });
 
-router.post('/tasks', async (req, res, next) => {
+router.post('/tasks', authenticate, async (req, res, next) => {
     try {
-        const newTask = new Task(req.body)
-        await newTask.save()
-        res.status(201).json(task)
-    } catch {
-        next(error)
+        const token = req.headers.authorization;
+        const decodedToken = readToken(token);
+        const { company, email, name } = decodedToken;
+        console.log(company)
+        if (!company) {
+            return res.status(401).json({ message: 'Empresa inválida' });
+        }
+
+        const newTask = new Task({
+            ...req.body,
+            createdBy: company
+        });
+        await newTask.save();
+        res.status(201).json(newTask);
+    } catch (error) {
+        next(error);
     }
+});
 
-})
-
-router.put("/tasks/:id", async (req, res, next) => {
+router.put("/tasks/:id", authenticate, async (req, res, next) => {
     try {
         const { params: { id }, body: updatedTask } = req;
         const task = await Task.findByIdAndUpdate(id, updatedTask, { new: true });
@@ -235,17 +296,17 @@ router.delete("/tasks/:id", async (req, res, next) => {
     }
 });
 
-router.get("/tasks/:id", async (req, res, next) => {
+router.get("/tasks/:id", authenticate, async (req, res, next) => {
     try {
-        const { params: { id } } = req;
-        const task = await Task.findById(id)
+        const { params: { id }, user } = req;
+        const task = await Task.findOne({ _id: id, createdBy: user._id })
         if (!task) {
             res.status(404).json({
                 error: true,
-                message: "Usuário não encontrado"
+                message: "Tarefa não encontrada"
             })
         }
-        res.json(task)
+        res.status(200).json(task)
     } catch (error) {
         next(error)
     }
