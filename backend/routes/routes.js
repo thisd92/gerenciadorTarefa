@@ -1,11 +1,24 @@
+const express = require('express')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const cors = require('cors');
-const router = require('express').Router()
+const cookieParser = require('cookie-parser')
+
 const User = require('../models/user')
 const Task = require('../models/task');
-const jwt = require('jsonwebtoken')
+
 require('dotenv').config()
-const cookieParser = require('cookie-parser')
+
 const SECRET = process.env.JWT_SECRET
+
+const router = express.Router()
+
+router.use(cors({
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'PUT', 'POST', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+}));
 
 router.use(cookieParser())
 
@@ -21,254 +34,223 @@ function readToken(token) {
     }
 }
 
-// function validateToken(token) {
-//     return readToken(token)
-// }
-
-router.use(cors({
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'PUT', 'POST', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-}));
-
-router.get('/home', (req, res) => {
-    const token = req.headers.authorization
+// Middleware de autenticação
+function authenticate(req, res, next) {
+    const token = req.headers.authorization;
     if (!token) {
-        return res.status(401).json({ mensagem: 'Token Inválido!' });
+        return res.status(401).json({ message: 'Token inválido' });
     }
     try {
-        readToken(token);
-        res.json({ mensagem: 'Bem-vindo à página protegida!' });
+        const decodedToken = readToken(token);
+        req.user = decodedToken;
+        next();
     } catch (error) {
-        res.status(401).json({ mensagem: 'Token inválido' });
+        return res.status(401).json({ message: 'Token inválido' });
     }
-})
+}
 
-router.post('/user', async (req, res) => {
-    const newUser = new User(req.body)
-    newUser.save()
-        .then((newUser) => {
-            res.status(201)
-            return res.json(newUser)
-        }).catch((erro) => {
-            res.status(400)
-            return res.json({
-                error: true,
-                message: "Email já utilizado."
-            })
-        })
+// Middleware de tratamento de erros
+function errorHandler(err, req, res, next) {
+    console.error(err.stack);
+    res.status(500).json({ error: true, message: 'Erro no servidor' });
+}
 
-})
-
-router.get("/user", (req, res) => {
-    User.find().then((user) => {
-        return res.json(user);
-    }).catch((erro) => {
-        return res.status(400).json({
-            error: true,
-            message: "Nenhum usuário encontrado!"
-        })
-    })
+router.get('/home', authenticate, (req, res) => {
+    res.json({ mensagem: 'Bem-vindo à página protegida!' });
 });
 
-router.get("/user/:id", async (req, res) => {
+router.post('/user', async (req, res) => {
     try {
-        const { params: { id }, body: user } = req;
-        const usuario = await User.findById(id)
-        if (usuario) {
-            res.json(usuario)
-        } else {
+        const user = new User(req.body);
+        const hashedPassword = await bcrypt.hash(user.password, 10);
+        user.password = hashedPassword;
+        await user.save();
+        res.status(201).json(user);
+    } catch (error) {
+        if (error.code === 11000) {
+            return res.status(400).json({
+                error: true,
+                message: "Email já utilizado."
+            });
+        }
+        res.status(500).json({ error: error.message });
+    }
+})
+
+router.get("/user", async (req, res, next) => {
+    try {
+        const users = await User.find()
+        res.json(users);
+    } catch {
+        next(error)
+    }
+});
+
+router.get("/user/:id", async (req, res, next) => {
+    try {
+        const { params: { id } } = req;
+        const user = await User.findById(id)
+        if (!user) {
             res.status(404).json({
                 error: true,
                 message: "Usuário não encontrado"
             });
         }
+        res.json(user)
     } catch (error) {
-        res.status(500).json({
-            error: true,
-            message: "Erro no servidor"
-        });
+        next(error)
     }
 })
 
 
-router.put("/user/:id", async (req, res) => {
+router.put("/user/:id", async (req, res, next) => {
     try {
         const { params: { id }, body: updatedUser } = req;
         const user = await User.findByIdAndUpdate(id, updatedUser, { new: true });
 
-        if (user) {
-            res.status(200).json(user);
-        } else {
+        if (!user) {
             res.status(404).json({
                 error: true,
                 message: "Usuário não encontrado"
             });
         }
+        res.status(200).json(user);
     } catch (error) {
-        res.status(500).json({
-            error: true,
-            message: "Erro no servidor"
-        });
+        next(error)
     }
 });
 
-router.delete("/user/:id", async (req, res) => {
+router.delete("/user/:id", async (req, res, next) => {
     try {
         const { params: { id } } = req;
         const user = await User.findByIdAndDelete(id);
 
-        if (user) {
-            res.status(200).json({
-                message: "Usuário deletado com sucesso"
-            });
-        } else {
+        if (!user) {
             res.status(404).json({
                 error: true,
                 message: "Usuário não encontrado"
             });
-        }
+        };
+        res.status(200).json({
+            message: "Usuário deletado com sucesso"
+        })
     } catch (error) {
-        res.status(500).json({
-            error: true,
-            message: "Erro no servidor"
-        });
+        next(error)
     }
 });
 
-router.post('/usersLogin', async (req, res) => {
+router.post('/usersLogin', async (req, res, next) => {
     try {
         const { body: userLogin } = req;
         const user = await User.findOne({ email: userLogin.email });
-
-        if (user && user.password === userLogin.password) {
-            const token = createToken(user)
-
-            res.status(200)
-                .cookie('authorization', token, {
-                    httpOnly: false,
-                    secure: true,
-                    sameSite: 'strict'
-                }).json(token)
-        } else {
-            res.status(400).send("Email ou senha inválidos");
+        if (!user) {
+            return res.status(401).json({ message: 'Email ou senha inválidos' })
         }
+
+        const isPasswordValid = await bcrypt.compare(userLogin.password, user.password)
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: 'Email ou senha inválidos' })
+        }
+
+        const token = createToken(user)
+        res.status(200)
+            .cookie('authorization', token, {
+                httpOnly: false,
+                secure: true,
+                sameSite: 'strict'
+            }).json(token)
     } catch (error) {
-        res.status(500).json({
-            error: true,
-            message: "Erro no servidor"
-        });
+        next(error)
     }
 });
 
-router.get('/usersLogin/:email', async (req, res) => {
+router.get('/usersLogin/:email', async (req, res, next) => {
     try {
         const { params: { email } } = req;
         const user = await User.findOne({ email: email });
 
-        if (user) {
-            res.status(200).json(user);
-        } else {
+        if (!user) {
             res.status(400).send("Email inválido");
         }
+        res.status(200).json(user);
     } catch (error) {
-        res.status(500).json({
-            error: true,
-            message: "Erro no servidor"
-        });
+        next(error)
     }
 });
 
-router.get("/tasks", (req, res) => {
-    Task.find().then((task) => {
-        return res.json(task);
-    }).catch((erro) => {
-        return res.status(400).json({
-            error: true,
-            message: "Nenhuma task encontrada!"
-        })
-    })
+router.get("/tasks", async (req, res, next) => {
+    try {
+        const tasks = await Task.find()
+        res.status(200).json(tasks);
+    } catch (error) {
+        next(error)
+    }
 });
 
-router.post('/tasks', async (req, res) => {
-    const newTask = new Task(req.body)
-    newTask.save()
-        .then((task) => {
-            res.status(201)
-            return res.json(task)
-        }).catch((erro) => {
-            res.status(400)
-            return res.json({
-                error: true,
-                message: erro
-            })
-        })
+router.post('/tasks', async (req, res, next) => {
+    try {
+        const newTask = new Task(req.body)
+        await newTask.save()
+        res.status(201).json(task)
+    } catch {
+        next(error)
+    }
 
 })
 
-router.put("/tasks/:id", async (req, res) => {
+router.put("/tasks/:id", async (req, res, next) => {
     try {
         const { params: { id }, body: updatedTask } = req;
         const task = await Task.findByIdAndUpdate(id, updatedTask, { new: true });
 
-        if (task) {
-            res.status(200).json(task);
-        } else {
+        if (!task) {
             res.status(404).json({
                 error: true,
                 message: "Task não encontrada"
             });
         }
+        res.status(200).json(task);
     } catch (error) {
-        res.status(500).json({
-            error: true,
-            message: "Erro no servidor"
-        });
+        next(error)
     }
 });
 
-router.delete("/tasks/:id", async (req, res) => {
+router.delete("/tasks/:id", async (req, res, next) => {
     try {
         const { params: { id } } = req;
         const task = await Task.findByIdAndDelete(id);
 
-        if (task) {
-            res.status(200).json({
-                message: "Task deletada com sucesso"
-            });
-        } else {
+        if (!task) {
             res.status(404).json({
                 error: true,
                 message: "Task não encontrada"
             });
         }
-    } catch (error) {
-        res.status(500).json({
-            error: true,
-            message: "Erro no servidor"
+
+        res.status(200).json({
+            message: "Task deletada com sucesso"
         });
+    } catch (error) {
+        next(error)
     }
 });
 
-router.get("/tasks/:id", async (req, res) => {
+router.get("/tasks/:id", async (req, res, next) => {
     try {
-        const { params: { id }, body: task } = req;
-        const tarefa = await Task.findById(id)
-        if (tarefa) {
-            res.json(tarefa)
-        } else {
+        const { params: { id } } = req;
+        const task = await Task.findById(id)
+        if (!task) {
             res.status(404).json({
                 error: true,
                 message: "Usuário não encontrado"
-            });
+            })
         }
+        res.json(task)
     } catch (error) {
-        res.status(500).json({
-            error: true,
-            message: "Erro no servidor"
-        });
+        next(error)
     }
 })
+
+router.use(errorHandler)
 
 module.exports = router
