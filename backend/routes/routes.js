@@ -282,7 +282,7 @@ router.delete("/tasks/:id", async (req, res, next) => {
         const task = await Task.findByIdAndDelete(id);
 
         if (!task) {
-            res.status(404).json({
+            return res.status(404).json({
                 error: true,
                 message: "Task não encontrada"
             });
@@ -298,8 +298,11 @@ router.delete("/tasks/:id", async (req, res, next) => {
 
 router.get("/tasks/:id", authenticate, async (req, res, next) => {
     try {
-        const { params: { id }, user } = req;
-        const task = await Task.findOne({ _id: id, createdBy: user._id })
+        const { params: { id } } = req;
+        const token = req.headers.authorization
+        const decodedToken = readToken(token)
+        const { company, email, name } = decodedToken
+        const task = await Task.findOne({ _id: id, createdBy: company })
         if (!task) {
             res.status(404).json({
                 error: true,

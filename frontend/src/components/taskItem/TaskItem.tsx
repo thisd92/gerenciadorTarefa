@@ -1,8 +1,11 @@
-import { Task } from "@/app/taskManager/type";
-import { DeleteTaskBtn, EditTaskBtn } from "../buttons/Buttons";
 import { useState } from "react";
 import axios from "axios";
-import { BASE_URL } from "../../utils/request";
+
+import { getToken } from "@/services/auth";
+import { BASE_URL } from "@/utils/request";
+
+import { DeleteTaskBtn, EditTaskBtn } from "../buttons/Buttons";
+import { Task } from "@/app/taskManager/type";
 import EditTask from "../editTask/EditTask";
 
 interface TaskItemProps {
@@ -30,7 +33,11 @@ const TaskItem: React.FC<TaskItemProps> = ({
     }
 
     const deleteTask = async () => {
-        await axios.delete(`${BASE_URL}/api/tasks/${task._id}`)
+        await axios.delete(`${BASE_URL}/api/tasks/${task._id}`, {
+            headers: {
+                Authorization: `${getToken()}`
+            }
+        })
         getTasks()
     };
 

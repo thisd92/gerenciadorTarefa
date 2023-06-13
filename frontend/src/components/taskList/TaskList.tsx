@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 
-import { BASE_URL } from '../../utils/request';
+import { BASE_URL } from '@/utils/request';
+import { getToken } from '@/services/auth';
 import { Task } from '@/app/taskManager/type';
 import TaskItem from '../taskItem/TaskItem';
 
@@ -83,7 +84,11 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, getTasks }) => {
                             break;
                     }
 
-                    axios.put(`${BASE_URL}/api/tasks/${taskId}`, updatedTask);
+                    axios.put(`${BASE_URL}/api/tasks/${taskId}`, updatedTask, {
+                        headers: {
+                            Authorization: `${getToken()}`
+                        }
+                    });
                     return updatedTask;
                 }
 

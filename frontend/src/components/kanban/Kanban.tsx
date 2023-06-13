@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import { Task } from '@/app/taskManager/type';
 import { BASE_URL } from '../../utils/request';
+import { getToken } from '@/services/auth';
 
 interface KanbanProps {
     tasks: Task[];
@@ -35,7 +36,12 @@ const Kanban: React.FC<KanbanProps> = ({ tasks, getTasks }) => {
         updatedTasks.splice(destination.index, 0, movedTask);
 
         const taskIdDrag = result.draggableId;
-        const taskMoved = await (await axios.get(`${BASE_URL}/api/tasks/${taskIdDrag}`)).data;
+        const mvTask = await axios.get(`${BASE_URL}/api/tasks/${taskIdDrag}`, {
+            headers: {
+                Authorization: `${getToken()}`
+            }
+        })
+        const taskMoved = mvTask.data;
 
         setTaskList(updatedTasks);
 
@@ -58,14 +64,17 @@ const Kanban: React.FC<KanbanProps> = ({ tasks, getTasks }) => {
             }
 
             const updatedTaskData = {
-                name: taskMoved.name,
-                description: taskMoved.description,
+                ...taskMoved,
                 toDo: newStatus === 'toDo',
                 isInProgress: newStatus === 'inProgress',
                 isFinished: newStatus === 'finished',
             };
 
-            await axios.put(`${BASE_URL}/api/tasks/${taskIdDrag}`, updatedTaskData);
+            await axios.put(`${BASE_URL}/api/tasks/${taskIdDrag}`, updatedTaskData, {
+                headers: {
+                    Authorization: `${getToken()}`
+                }
+            });
             getTasks();
             console.log('Task updated successfully');
         } catch (error) {
