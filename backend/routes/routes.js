@@ -88,7 +88,7 @@ router.get("/company", async (req, res, next) => {
 router.post('/user', async (req, res) => {
     try {
         const companyName = req.body.companyName;
-        const company = await Company.findOne({ name: companyName }); // Corrigido para usar a variável companyName
+        const company = await Company.findOne({ name: companyName });
         if (!company) {
             return res.status(400).json({
                 error: true,
@@ -96,7 +96,7 @@ router.post('/user', async (req, res) => {
             });
         }
         const user = new User(req.body);
-        user.company = String(company._id); // Corrigido para atribuir o _id da empresa ao usuário
+        user.company = String(company._id);
         const hashedPassword = await bcrypt.hash(user.password, 10);
         user.password = hashedPassword;
         await user.save();
@@ -243,7 +243,6 @@ router.post('/tasks', authenticate, async (req, res, next) => {
         const token = req.headers.authorization;
         const decodedToken = readToken(token);
         const { company, email, name } = decodedToken;
-        console.log(company)
         if (!company) {
             return res.status(401).json({ message: 'Empresa inválida' });
         }
@@ -276,7 +275,7 @@ router.put("/tasks/:id", authenticate, async (req, res, next) => {
     }
 });
 
-router.delete("/tasks/:id", async (req, res, next) => {
+router.delete("/tasks/:id", authenticate, async (req, res, next) => {
     try {
         const { params: { id } } = req;
         const task = await Task.findByIdAndDelete(id);

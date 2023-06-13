@@ -91,7 +91,11 @@ async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     try {
         setIsLoading(true);
-        await axios.put(`${BASE_URL}/api/tasks/${task?._id}`, task);
+        await axios.put(`${BASE_URL}/api/tasks/${task?._id}`, task, {
+            headers: {
+                Authorization: `${getToken()}`
+            }
+        });
         getTasks()
         handleEditTask()
     } catch (error) {
