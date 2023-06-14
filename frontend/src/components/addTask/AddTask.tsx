@@ -72,7 +72,7 @@ export default function AddTask(
 
     return (
         <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50 py-10">
-            <div className="max-h-full w-full max-w-sm overflow-y-auto sm:rounded-2xl bg-slate-200">
+            <div className="max-h-full w-full max-w-sm overflow-y-auto sm:rounded-2xl bg-gray-200">
                 <div className="w-full">
                     <div className="m-8 my-10 max-w-[300px] mx-auto">
                         <div className="mb-8">

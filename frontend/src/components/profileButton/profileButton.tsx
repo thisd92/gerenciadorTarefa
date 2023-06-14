@@ -38,28 +38,28 @@ export default function ProfileButton({ router, onLogout }: ProfileButtonProps) 
             <div className="relative">
                 <button
                     type="button"
-                    className="mr-4 hover:bg-slate-400 rounded-md p-1"
+                    className="mr-4 hover:bg-gray-400 rounded-md p-1"
                     onClick={toggleDropdown}
                 >
-                    <Link href="#" className="flex items-center">
+                    <button className="flex items-center">
                         <FaUserCircle size={20} />
-                    </Link>
+                    </button>
                 </button>
 
                 <div
-                    className={`absolute right-0 z-10 w-56 mt-2 origin-top-right bg-slate-400 rounded-md shadow-lg ${isOpen ? "" : "hidden"
+                    className={`absolute right-0 z-10 w-56 mt-2 origin-top-right bg-gray-400 rounded-md shadow-lg ${isOpen ? "" : "hidden"
                         }`}
                     ref={dropdownRef}
                 >
                     <div className="p-2">
                         <Link
                             href="/profile"
-                            className="block px-4 py-2 text-sm text-gray-700 rounded-lg hover:bg-slate-300 hover:text-gray-700"
+                            className="block px-4 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-300 hover:text-gray-700"
                         >
                             Profile
                         </Link>
                         <button
-                            className="block text-left w-full px-4 py-2 text-sm text-gray-700 rounded-lg hover:bg-slate-300 hover:text-gray-700"
+                            className="block text-left w-full px-4 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-300 hover:text-gray-700"
                             onClick={() => logout({ router, onLogout })}
                         >
                             Sign Out

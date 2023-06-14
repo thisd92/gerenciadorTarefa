@@ -6,7 +6,7 @@ import Logo from '../../../public/LogoDevTH.png'
 export default function Footer() {
     return (
 
-        <footer className="w-full bg-slate-300 rounded-lg shadow dark:bg-gray-900">
+        <footer className="w-full bg-gray-300 rounded-lg shadow dark:bg-gray-900">
             <div className="w-full max-w-screen-xl mx-auto p-3 md:py-8">
                 <div className="sm:flex sm:items-center sm:justify-between">
                     <Link href="https://dev-th.tech" className="flex items-center mb-4 sm:mb-0">

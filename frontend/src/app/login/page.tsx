@@ -36,7 +36,7 @@ export default function Login() {
             setIsLoading(true);
             const response = await axios.post(`${BASE_URL}/api/usersLogin`, userLogin, {withCredentials: true});
             if (response.status === 200) {
-                router.push(`/`)
+                router.push(`/taskManager`)
             }
         } catch (error) {
             setErrorMsg("Invalid Email or Password")
@@ -50,7 +50,7 @@ export default function Login() {
     return (
         <main className="flex flex-grow flex-col items-center justify-center">
             <section>
-                <div className="border-2 border-slate-300 rounded-md shadow-lg px-8 pt-6 pb-8 mb-4">
+                <div className="border-2 border-gray-300 rounded-md shadow-lg px-8 pt-6 pb-8 mb-4">
                     <header className="font-bold p-1">Login</header>
                     <div className="flex flex-col mt-4">
                         <form className="flex flex-col gap-2" onSubmit={handleSubmit}>

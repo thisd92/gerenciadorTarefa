@@ -32,7 +32,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, getTasks }) => {
             <button
                 key={i}
                 onClick={() => paginate(i)}
-                className={`px-2 py-1 mx-1 rounded ${i === currentPage ? 'bg-slate-500 text-white' : 'bg-slate-200 text-slate-700'
+                className={`px-2 py-1 mx-1 rounded ${i === currentPage ? 'bg-gray-500 text-white' : 'bg-gray-200 text-gray-700'
                     }`}
             >
                 {i}
@@ -112,7 +112,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, getTasks }) => {
 
     return (
         <section className="w-2/6">
-            <div className="border-2 border-slate-300 rounded-md shadow-lg pt-6 pb-8 mb-4">
+            <div className="border-2 border-gray-300 rounded-md shadow-lg pt-6 pb-8 mb-4">
                 <header className="flex font-bold p-1 justify-center">
                     <div>
                         <h1 className='font-bold'>Task List</h1>

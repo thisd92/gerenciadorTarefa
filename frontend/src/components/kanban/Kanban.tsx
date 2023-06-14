@@ -99,7 +99,7 @@ const Kanban: React.FC<KanbanProps> = ({ tasks, getTasks }) => {
         ));
 
     return (
-        <section className="w-2/4 border-2 border-slate-300 rounded-md shadow-lg px-8 pt-6 pb-8 mb-4">
+        <section className="w-2/4 border-2 border-gray-300 rounded-md shadow-lg px-8 pt-6 pb-8 mb-4">
             <DragDropContext onDragEnd={handleDragEnd}>
                 <div className="flex flex-row gap-4 justify-around">
                     <div>
