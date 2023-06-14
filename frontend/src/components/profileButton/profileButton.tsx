@@ -1,8 +1,10 @@
-import { logout } from "@/services/logout";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+
 import { FaUserCircle } from "react-icons/fa";
+
+import { logout } from "@/services/logout";
 
 interface ProfileButtonProps {
     router: AppRouterInstance,

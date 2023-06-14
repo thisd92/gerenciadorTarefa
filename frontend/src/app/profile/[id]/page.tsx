@@ -1,12 +1,12 @@
 'use client'
-import ProfileAdmin from "@/components/profileAdmin/profileAdmin"
-import ProfileUser from "@/components/profileUser/profileUser"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import axios from "axios"
 
-import { useEffect, useState } from "react"
-import { BASE_URL } from "../../../utils/request"
+import ProfileAdmin from "@/components/profileAdmin/profileAdmin"
+import ProfileUser from "@/components/profileUser/profileUser"
+import { BASE_URL } from "@/utils/request"
 import { authToken } from "@/services/auth"
-import { useRouter } from "next/navigation"
 
 interface UserProps {
     params: {
