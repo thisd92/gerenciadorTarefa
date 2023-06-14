@@ -24,7 +24,7 @@ router.use(cors({
 router.use(cookieParser())
 
 function createToken(user) {
-    return jwt.sign({ company: user.company, email: user.email, name: user.name }, SECRET)
+    return jwt.sign({ id: user._id, company: user.company, email: user.email, name: user.name }, SECRET)
 }
 
 function readToken(token) {
@@ -59,6 +59,23 @@ function errorHandler(err, req, res, next) {
 router.get('/protected', authenticate, (req, res) => {
     res.json({ mensagem: 'Bem-vindo à página protegida!' });
 });
+
+router.get("/profile", authenticate, async (req, res, next) => {
+    try {
+        const token = req.headers.authorization
+        const decodedToken = readToken(token)
+        const { id } = decodedToken
+        if (!id) {
+            res.status(404).json({
+                error: true,
+                message: "Usuário não encontrado"
+            })
+        }
+        res.status(200).json(id)
+    } catch (error) {
+        next(error)
+    }
+})
 
 router.post('/company', async (req, res) => {
     try {
@@ -231,7 +248,7 @@ router.get("/tasks", authenticate, async (req, res, next) => {
         const token = req.headers.authorization
         const decodedToken = readToken(token)
         const { company, email, name } = decodedToken
-        const tasks = await Task.find({ createdBy: company }); // Filtra as tarefas pelo ID do usuário
+        const tasks = await Task.find({ createdBy: company });
         res.status(200).json(tasks);
     } catch (error) {
         next(error);
