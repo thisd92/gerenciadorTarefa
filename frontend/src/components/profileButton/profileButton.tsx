@@ -38,7 +38,7 @@ export default function ProfileButton({ router, onLogout }: ProfileButtonProps) 
             <div className="relative">
                 <button
                     type="button"
-                    className="mr-4 hover:bg-gray-400 rounded-md p-1"
+                    className="rounded-md p-1"
                     onClick={toggleDropdown}
                 >
                     <button className="flex items-center">

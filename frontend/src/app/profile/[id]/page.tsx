@@ -4,28 +4,31 @@ import ProfileUser from "@/components/profileUser/profileUser"
 import axios from "axios"
 
 import { useEffect, useState } from "react"
-import { BASE_URL } from "../../utils/request"
+import { BASE_URL } from "../../../utils/request"
+import { authToken } from "@/services/auth"
+import { useRouter } from "next/navigation"
 
 interface UserProps {
     params: {
-        name: string
+        id: string
     }
 }
 
 export default function Profile({ params }: UserProps) {
 
+    const router = useRouter()
 
     const [user, setUser] = useState(false)
     const [admin, setAdmin] = useState(false)
 
     useEffect(() => {
+        authToken({router})
         handleRole()
-
     }, [])
 
     async function handleRole() {
         try {
-            const response = await axios.get(`${BASE_URL}/api/user/${params.name}`)
+            const response = await axios.get(`${BASE_URL}/api/user/${params.id}`)
             const role = response.data.role
             if (role === "user") {
                 setUser(true)

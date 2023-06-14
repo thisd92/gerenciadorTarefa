@@ -119,7 +119,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, getTasks }) => {
                     </div>
                 </header>
                 <div className="flex flex-col mt-4">
-                    <ul className="max-w-md divide-y divide-gray-200 dark:divide-gray-700 p-2 shadow-lg min-h-[430px]">
+                    <ul className="w-full divide-y divide-gray-200 dark:divide-gray-700 p-2 shadow-lg min-h-[430px]">
                         {currentTasks.map((task, index) => (
                             <TaskItem
                                 index={index}

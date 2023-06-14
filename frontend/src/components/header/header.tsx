@@ -18,20 +18,18 @@ export function Header({ isLogged, router, onLogout }: HeaderProps) {
     return (
         <header className="w-full">
             <nav>
-                <ul className='flex items-center justify-end flex-wrap bg-gray-300 p-6'>
-                    <li className='mr-4 hover:bg-gray-400 rounded-md p-1'>
+                <ul className='flex items-center justify-end flex-wrap bg-gray-500 p-6'>
+                    <li className='mr-4 font-bold text-gray-100 hover:bg-gray-700 rounded-md p-1'>
                         <Link className='flex items-center' href="/"><AiFillHome className='mr-1' />Home</Link>
                     </li>
-                    <li className='mr-4 hover:bg-gray-400 rounded-md p-1'>
+                    <li className='mr-4 font-bold text-gray-100 hover:bg-gray-700 rounded-md p-1'>
                         <Link className='flex items-center' href="/taskManager"><GoTasklist className='mr-1' />Task Manager</Link>
                     </li>
-                    <li className='mr-4 hover:bg-gray-400 rounded-md p-1'>
-                        {
-                            isLogged ? <ProfileButton onLogout={onLogout} router={router} /> :
-                                <Link className='flex items-center' href="/login">
-                                    <IoLogInOutline className='mr-1' />Login
-                                </Link>
-                        }
+                    <li className='mr-4 font-bold text-gray-100 hover:bg-gray-700 rounded-md p-1'>
+                        {!isLogged && <Link className='flex items-center' href="/login">
+                            <IoLogInOutline className='mr-1' />Login
+                        </Link>}
+                        {isLogged && <ProfileButton onLogout={onLogout} router={router} />}
                     </li>
                 </ul>
             </nav>
