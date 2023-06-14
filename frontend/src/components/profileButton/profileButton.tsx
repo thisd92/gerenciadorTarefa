@@ -47,6 +47,7 @@ export default function ProfileButton({ router, onLogout }: ProfileButtonProps) 
                 }
             })
             const userId = response.data
+            setIsOpen(false)
             router.push(`/profile/${userId}`)
         } catch (error) {
             console.log(error)
