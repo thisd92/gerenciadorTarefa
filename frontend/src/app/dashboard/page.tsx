@@ -43,17 +43,30 @@ const Dashboard = () => {
     const countInProgress = tasksInProgress.length;
     const countFinished = tasksFinished.length;
 
+    const sumTasks = (countToDo + countInProgress + countFinished)
+
     if (loading) {
         return <p>Loading...</p>;
     }
 
     return (
-        <main className="flex flex-col flex-grow items-center my-4">
+        <main className="flex flex-col flex-grow w-full items-center my-4">
             <div>
                 <h1>Dashboard</h1>
             </div>
             <section className="flex flex-row flex-wrap w-full justify-around mt-4">
-                <div className="flex items-center rounded-lg shadow-md shadow-gray-400 justify-center w-2/6 bg-gray-100 p-1">
+                <div className="flex flex-col items-center rounded-lg shadow-md shadow-gray-400 justify-center w-1/4 bg-gray-100 p-4">
+                    <div>
+                        <h2 className="text-xl font-bold">Tasks</h2>
+                    </div>
+                    <div className="mt-4">
+                        <p className="text-sm">Total: {sumTasks}</p>
+                        <p className="text-sm">To Do: {countToDo}</p>
+                        <p className="text-sm">In Progress: {countInProgress}</p>
+                        <p className="text-sm">Finished: {countFinished}</p>
+                    </div>
+                </div>
+                <div className="flex items-center rounded-lg shadow-md shadow-gray-400 justify-center w-1/4 bg-gray-100 p-1">
                     <BarChart
                         data={[
                             { label: "To Do", value: countToDo },
@@ -62,7 +75,7 @@ const Dashboard = () => {
                         ]}
                     />
                 </div>
-                <div className="flex items-center rounded-lg shadow-md shadow-gray-400 justify-center w-2/6 bg-gray-100 p-1">
+                <div className="flex items-center rounded-lg shadow-md shadow-gray-400 justify-center w-1/4 bg-gray-100 p-1">
                     <PieChart
                         data={[
                             { label: "To Do", value: countToDo },

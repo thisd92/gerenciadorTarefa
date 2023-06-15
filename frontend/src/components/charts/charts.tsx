@@ -24,20 +24,14 @@ const PieChart: React.FC<PieChartProps> = ({ data }) => {
                 labels: "Tasks",
                 data: data.map((item) => item.value),
                 backgroundColor: [
-                    "#FF6384",
-                    "#36A2EB",
-                    "#FFCE56",
-                    "#8A2BE2",
+                    "#87CEFA",
+                    "#F0E68C",
                     "#00FF7F",
-                    "#FFA500",
                 ],
                 hoverBackgroundColor: [
-                    "#FF6384",
-                    "#36A2EB",
-                    "#FFCE56",
-                    "#8A2BE2",
+                    "#87CEFA",
+                    "#F0E68C",
                     "#00FF7F",
-                    "#FFA500",
                 ],
             },
         ],
@@ -49,7 +43,7 @@ const PieChart: React.FC<PieChartProps> = ({ data }) => {
             },
         }
     }
-    
+
     return (
         <div>
             <h2>Pie Chart</h2>
@@ -69,8 +63,12 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
             {
                 label: "# of Tasks",
                 data: data.map((item) => item.value),
-                backgroundColor: "#36A2EB",
-                borderColor: "#36A2EB",
+                backgroundColor: [
+                    "#87CEFA",
+                    "#F0E68C",
+                    "#00FF7F",
+                ],
+                borderColor: "#FFFAFA",
                 borderWidth: 1,
             },
         ],
