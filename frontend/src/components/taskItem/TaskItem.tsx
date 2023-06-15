@@ -7,6 +7,7 @@ import { BASE_URL } from "@/utils/request";
 import { DeleteTaskBtn, EditTaskBtn } from "../buttons/Buttons";
 import { Task } from "@/app/taskManager/type";
 import EditTask from "../editTask/EditTask";
+import { useRouter } from "next/navigation";
 
 interface TaskItemProps {
     index: number
@@ -26,19 +27,26 @@ const TaskItem: React.FC<TaskItemProps> = ({
     getTasks,
 }) => {
 
+    const router = useRouter()
+
     const [editTask, setEditTask] = useState(false)
 
     const handleEditTask = () => {
         setEditTask(!editTask)
+        // router.push(`/task/${task._id}`)
     }
 
     const deleteTask = async () => {
-        await axios.delete(`${BASE_URL}/api/tasks/${task._id}`, {
-            headers: {
-                Authorization: `${getToken()}`
-            }
-        })
-        getTasks()
+        try {
+            await axios.delete(`${BASE_URL}/api/tasks/${task._id}`, {
+                headers: {
+                    Authorization: `${getToken()}`
+                }
+            })
+            getTasks()
+        } catch (error) {
+            console.log(error)
+        }
     };
 
 
@@ -98,7 +106,6 @@ const TaskItem: React.FC<TaskItemProps> = ({
             </li>
             <div>
                 {editTask && <EditTask taskId={task._id ?? ""} getTasks={getTasks} handleEditTask={handleEditTask} />}
-
             </div>
         </>
     )

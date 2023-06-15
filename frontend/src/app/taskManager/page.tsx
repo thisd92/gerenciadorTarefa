@@ -69,8 +69,8 @@ export default function TaskManager() {
 
     return (
         <main className="flex flex-col flex-grow items-center mt-4 w-5/6" >
-            <section className='w-1/6 mb-4'>
-                <div className='flex flex-row justify-around'>
+            <section className='flex flex-col items-center w-2/6 mb-4'>
+                <div className='flex flex-row justify-around w-3/4'>
                     <AddTaskBtn active={addTask} onClick={handleAddTask} />
                     <ListButton active={list} onClick={handleListClick} />
                     <KanbanButton active={kanban} onClick={handleKanbanClick} />
