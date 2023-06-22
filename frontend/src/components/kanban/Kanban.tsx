@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import axios from 'axios';
 
-import { Task } from '@/app/taskManager/type';
+import { Task } from '@/app/project/taskManager/type';
 import { BASE_URL } from '../../utils/request';
 import { getToken } from '@/services/auth';
 

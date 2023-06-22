@@ -1,3 +1,4 @@
+'use client'
 import axios from "axios";
 import { useRef, useState } from "react";
 
@@ -5,43 +6,40 @@ import { AiOutlineCloseSquare } from "react-icons/ai"
 import { MdAddTask } from "react-icons/md";
 
 import { BASE_URL } from "../../utils/request";
-import { Task } from "@/app/project/taskManager/type";
 import { FormButton } from "../buttons/Buttons";
 import FormInput from "../formInput/formInput";
 import LabelForm from "../labelForm/labelForm";
 import SpanError from "../spanError/spanError";
 import { getCookie } from "cookies-next";
+import { Project } from "../projectItem/type";
 
-export default function AddTask(
-    { getTasks, handleAddTask, addTaskToList, projectId }: {
-        getTasks: () => void,
-        handleAddTask: () => void,
-        addTaskToList: () => void,
-        projectId: string
+export default function AddProject(
+    { getProjects, handleAddProject, addProjectToList }: {
+        getProjects: () => void,
+        handleAddProject: () => void,
+        addProjectToList: () => void
     }) {
 
-    const newTask: Task = {
+    const newProject: Project = {
         name: "",
         description: "",
         toDo: true,
-        isInProgress: false,
         isFinished: false,
-        project: projectId
     }
 
-    const [task, setTask] = useState<Task>(newTask)
+    const [project, setProject] = useState<Project>(newProject)
     const [errorMsg, setErrorMsg] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const formRef = useRef<HTMLFormElement>(null)
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = e.target
-        setTask({ ...task, [name]: value })
+        setProject({ ...project, [name]: value })
     }
 
     function handleTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
         const { name, value } = e.target
-        setTask({ ...task, [name]: value })
+        setProject({ ...project, [name]: value })
     }
 
     async function handleSubmit(e: React.FormEvent) {
@@ -49,15 +47,15 @@ export default function AddTask(
         try {
             setIsLoading(true);
             const token = getCookie('authorization')
-            await axios.post(`${BASE_URL}/api/tasks`, task, {
+            await axios.post(`${BASE_URL}/api/projects`, project, {
                 headers: {
                     Authorization: `${token}`
-                },
+                }
             });
             resetValues()
-            getTasks()
-            handleAddTask()
-            addTaskToList()
+            getProjects()
+            handleAddProject()
+            addProjectToList()
         } catch (error) {
             setErrorMsg("erro")
             setTimeout(() => setErrorMsg(""), 2000)
@@ -68,7 +66,7 @@ export default function AddTask(
     }
 
     function resetValues() {
-        setTask(newTask)
+        setProject(newProject)
         if (formRef.current) formRef.current.reset()
     }
 
@@ -81,14 +79,14 @@ export default function AddTask(
                             <div className="flex flex-col mt-4">
                                 <header className="flex flex-row items-center mb-4 font-bold">
                                     <MdAddTask className="mr-1" size={20} />
-                                    <h1>Add New Task</h1>
-                                    <button className="ml-auto text-gray-500 hover:text-gray-700" onClick={handleAddTask}>
+                                    <h1>Add New Project</h1>
+                                    <button className="ml-auto text-gray-500 hover:text-gray-700" onClick={handleAddProject}>
                                         <AiOutlineCloseSquare size={20} />
                                     </button>
                                 </header>
                                 <form ref={formRef} className="flex flex-col gap-2" onSubmit={handleSubmit}>
                                     <div className="flex flex-col">
-                                        <LabelForm htmlFor="name">Task Name</LabelForm>
+                                        <LabelForm htmlFor="name">Project Name</LabelForm>
                                         <FormInput type="text" name="name" id="name" onChange={handleChange} />
                                     </div>
                                     <div className="flex flex-col">

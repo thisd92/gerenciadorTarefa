@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 
 import { BASE_URL } from '@/utils/request';
 import { getToken } from '@/services/auth';
-import { Task } from '@/app/taskManager/type';
+import { Task } from '@/app/project/taskManager/type';
 import TaskItem from '../taskItem/TaskItem';
 
 interface TaskListProps {

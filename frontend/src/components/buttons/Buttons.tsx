@@ -12,7 +12,7 @@ const FormButton = (props: FormButtonProps) => {
     )
 }
 
-const AddTaskBtn = ({ active, onClick }: any) => {
+const AddBtn = ({ active, onClick }: any) => {
     return (
         <button
             className={`${active ? 'bg-gray-400' : 'bg-gray-300'} shadow-gray-400 p-1 rounded-md shadow-md`}
@@ -23,7 +23,7 @@ const AddTaskBtn = ({ active, onClick }: any) => {
     )
 }
 
-const EditTaskBtn = ({ active, onClick }: {active: any, onClick: () => void}) => {
+const EditBtn = ({ active, onClick }: {active: any, onClick: () => void}) => {
     return (
         <button
             className={`p-1 rounded-md border border-gray-200 shadow-gray-400 shadow-md ${active ? 'bg-gray-500' : 'bg-gray-300'}`}
@@ -34,7 +34,7 @@ const EditTaskBtn = ({ active, onClick }: {active: any, onClick: () => void}) =>
     )
 }
 
-const DeleteTaskBtn = ({ active, onClick }: any) => {
+const DeleteBtn = ({ active, onClick }: any) => {
     return (
         <button
             className={`ml-1 p-1 rounded-md border border-gray-200 shadow-gray-400 shadow-md ${active ? 'bg-gray-500' : 'bg-gray-300'}`}
@@ -67,4 +67,4 @@ const KanbanButton = ({ active, onClick }: any) => {
     );
 };
 
-export { AddTaskBtn, FormButton, ListButton, KanbanButton, EditTaskBtn, DeleteTaskBtn };
+export { AddBtn, FormButton, ListButton, KanbanButton, EditBtn, DeleteBtn };

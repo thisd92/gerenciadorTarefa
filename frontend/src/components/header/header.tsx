@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { AuthContext } from "@/Context/AuthContext";
 import ProfileButton from "../profileButton/profileButton";
 
-import { AiFillHome } from "react-icons/ai";
+import { AiFillHome, AiFillProject } from "react-icons/ai";
 import { GoTasklist } from "react-icons/go";
 import { IoLogInOutline } from "react-icons/io5";
 import { RiDashboardFill } from "react-icons/ri";
@@ -46,9 +46,9 @@ export function Header() {
                         </Link>
                     </li>
                     <li className="mr-4 font-bold text-gray-100 hover:bg-gray-700 rounded-md p-1">
-                        <Link className="flex items-center" href="/taskManager">
-                            <GoTasklist className="mr-1" />
-                            Task Manager
+                        <Link className="flex items-center" href="/project">
+                            <AiFillProject className="mr-1" />
+                            Project Manager
                         </Link>
                     </li>
                     <li className="mr-4 font-bold text-gray-100 hover:bg-gray-700 rounded-md p-1">

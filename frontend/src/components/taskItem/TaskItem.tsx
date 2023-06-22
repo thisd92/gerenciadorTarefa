@@ -4,8 +4,8 @@ import axios from "axios";
 import { getToken } from "@/services/auth";
 import { BASE_URL } from "@/utils/request";
 
-import { DeleteTaskBtn, EditTaskBtn } from "../buttons/Buttons";
-import { Task } from "@/app/taskManager/type";
+import { DeleteBtn, EditBtn } from "../buttons/Buttons";
+import { Task } from "@/app/project/taskManager/type";
 import EditTask from "../editTask/EditTask";
 import { useRouter } from "next/navigation";
 
@@ -27,13 +27,10 @@ const TaskItem: React.FC<TaskItemProps> = ({
     getTasks,
 }) => {
 
-    const router = useRouter()
-
     const [editTask, setEditTask] = useState(false)
 
     const handleEditTask = () => {
         setEditTask(!editTask)
-        // router.push(`/task/${task._id}`)
     }
 
     const deleteTask = async () => {
@@ -62,8 +59,8 @@ const TaskItem: React.FC<TaskItemProps> = ({
                             </span>
                         </div>
                         <div className="flex flex-row items-center">
-                            <EditTaskBtn active={editTask} onClick={handleEditTask} />
-                            <DeleteTaskBtn onClick={deleteTask} />
+                            <EditBtn active={editTask} onClick={handleEditTask} />
+                            <DeleteBtn onClick={deleteTask} />
                         </div>
 
                     </div>

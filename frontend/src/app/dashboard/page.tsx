@@ -5,38 +5,54 @@ import { authToken, getToken } from "@/services/auth";
 import { BASE_URL } from "@/utils/request";
 import { BarChart, PieChart } from "@/components/charts/charts";
 import TaskCard from "@/components/taskCard/taskCard";
-import { Task } from "../taskManager/type";
+import { Task } from "../project/taskManager/type";
 import { useRouter } from "next/navigation";
+import { Project } from "@/components/projectItem/type";
 
 const Dashboard = () => {
     const [tasks, setTasks] = useState([]);
+    const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const router = useRouter()
 
     useEffect(() => {
         authToken({ router })
-        const fetchTasks = async () => {
+        const fetchData = async () => {
             try {
-                const response = await axios.get(`${BASE_URL}/api/tasks`, {
+                const responseTasks = await axios.get(`${BASE_URL}/api/tasks`, {
                     headers: {
                         Authorization: getToken(),
                     },
                 });
-                setTasks(response.data);
+                const responseProjects = await axios.get(`${BASE_URL}/api/projects`, {
+                    headers: {
+                        Authorization: getToken(),
+                    },
+                });
+                setTasks(responseTasks.data);
+                setProjects(responseProjects.data);
                 setLoading(false);
             } catch (error) {
                 console.log(error);
             }
         };
 
-        fetchTasks();
+        fetchData();
     }, []);
 
     // Filtra as tarefas por estado
     const tasksToDo: Task[] = tasks.filter((task: Task) => task.toDo);
     const tasksInProgress: Task[] = tasks.filter((task: Task) => task.isInProgress);
     const tasksFinished: Task[] = tasks.filter((task: Task) => task.isFinished);
+
+    // Filtra os projetos por estado
+    const projectsToDo: Project[] = projects.filter((project: Project) => project.toDo);
+    const projectsFinished: Project[] = projects.filter((project: Project) => project.isFinished);
+
+    // Calcula a quantidade de projetos em cada estado
+    const countProjectsToDo = projectsToDo.length;
+    const countProjectsFinished = projectsFinished.length;
 
     // Calcula a quantidade de tarefas em cada estado
     const countToDo = tasksToDo.length;
@@ -73,9 +89,8 @@ const Dashboard = () => {
                 <div className="flex items-center rounded-lg shadow-md shadow-gray-400 justify-center w-1/4 bg-gray-100 p-1">
                     <BarChart
                         data={[
-                            { label: "To Do", value: countToDo },
-                            { label: "In Progress", value: countInProgress },
-                            { label: "Finished", value: countFinished },
+                            { label: "To Do", value: countProjectsToDo },
+                            { label: "Finished", value: countProjectsFinished },
                         ]}
                     />
                 </div>

@@ -2,11 +2,11 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react'
 
-import { AddTaskBtn, KanbanButton, ListButton } from '@/components/buttons/Buttons';
-import { BASE_URL } from '../../utils/request';
+import { AddBtn, KanbanButton, ListButton } from '@/components/buttons/Buttons';
+import { BASE_URL } from '../../../utils/request';
 import { Task } from './type';
-import Kanban from '../../components/kanban/Kanban';
-import TaskList from '../../components/taskList/TaskList';
+import Kanban from '../../../components/kanban/Kanban';
+import TaskList from '../../../components/taskList/TaskList';
 import AddTask from '@/components/addTask/AddTask';
 import SpanError from '@/components/spanError/spanError';
 import SpanSuccess from '@/components/spanSuccess/spanSuccess';
@@ -71,12 +71,12 @@ export default function TaskManager() {
         <main className="flex flex-col flex-grow items-center mt-4 w-5/6" >
             <section className='flex flex-col items-center w-2/6 mb-4'>
                 <div className='flex flex-row justify-around w-3/4'>
-                    <AddTaskBtn active={addTask} onClick={handleAddTask} />
+                    <AddBtn active={addTask} onClick={handleAddTask} />
                     <ListButton active={list} onClick={handleListClick} />
                     <KanbanButton active={kanban} onClick={handleKanbanClick} />
                 </div>
                 {showMessage && <SpanSuccess>Tarefa adicionada com sucesso</SpanSuccess>}
-                {addTask && <AddTask addTaskToList={addTaskToList} getTasks={getTasks} handleAddTask={handleAddTask} />}
+                {addTask && <AddTask projectId='' addTaskToList={addTaskToList} getTasks={getTasks} handleAddTask={handleAddTask} />}
             </section>
             <SpanError>{errorMsg}</SpanError>
             {list && <TaskList tasks={tasks} getTasks={getTasks} />}

@@ -5,7 +5,7 @@ import { AiOutlineCloseSquare } from "react-icons/ai"
 import { MdEdit } from "react-icons/md";
 
 import { BASE_URL } from "../../utils/request";
-import { Task } from "@/app/taskManager/type";
+import { Task } from "@/app/project/taskManager/type";
 import { FormButton } from "../buttons/Buttons";
 import FormInput from "../formInput/formInput";
 import LabelForm from "../labelForm/labelForm";

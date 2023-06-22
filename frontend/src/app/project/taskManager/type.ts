@@ -5,5 +5,6 @@ export interface Task{
     isInProgress?: boolean,
     isFinished?: boolean,
     _id?: string,
+    project?: string,
     createdBy?: string
 }

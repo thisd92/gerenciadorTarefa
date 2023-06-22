@@ -46,7 +46,7 @@ const PieChart: React.FC<PieChartProps> = ({ data }) => {
 
     return (
         <div>
-            <h2>Pie Chart</h2>
+            <h2>Tasks</h2>
             <Pie data={chartData} options={chartOptions} />
         </div >
     );
@@ -61,7 +61,7 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
         labels: data.map((item) => item.label),
         datasets: [
             {
-                label: "# of Tasks",
+                label: "# of Projects",
                 data: data.map((item) => item.value),
                 backgroundColor: [
                     "#87CEFA",
@@ -85,7 +85,7 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
 
     return (
         <div>
-            <h2>Bar Chart</h2>
+            <h2>Projetos</h2>
             <Bar data={chartData} options={chartOptions} />
         </div>
     );
