@@ -5,7 +5,7 @@ import { getToken } from "@/services/auth";
 import { BASE_URL } from "@/utils/request";
 
 import { DeleteBtn, EditBtn } from "../buttons/Buttons";
-import { Task } from "@/app/project/taskManager/type";
+import { Task } from "@/components/taskManager/type";
 import EditTask from "../editTask/EditTask";
 import { useRouter } from "next/navigation";
 

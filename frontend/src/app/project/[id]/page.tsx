@@ -6,8 +6,10 @@ import axios from "axios"
 import { BASE_URL } from "@/utils/request"
 import { authToken, getToken } from "@/services/auth"
 import { Project } from "@/components/projectItem/type"
-import { getCookie } from "cookies-next"
-import TaskManager from "../taskManager/page"
+import TaskManager from "../../../components/taskManager/page"
+
+import { GrLinkPrevious } from "react-icons/gr"
+import Link from "next/link"
 
 interface ProjectProps {
     params: {
@@ -63,12 +65,17 @@ export default function ProjectData({ params }: ProjectProps) {
     return (
         <main className="flex flex-row flex-grow justify-center w-full">
             <div className="bg-gray-100 w-1/4 p-6 rounded-lg shadow-md">
+                <div className="flex flex-row justify-between">
+                    <Link href={'/project'}>
+                        <GrLinkPrevious size={30} />
+                    </Link>
+                </div>
                 <h1 className="text-2xl font-bold mb-4 text-gray-800">Project: {projectData.name}</h1>
                 <div className="mb-4">
                     <p className="text-gray-600">Description: {projectData.description}</p>
                 </div>
             </div>
-            <TaskManager />
+            <TaskManager projectId={params.id} />
         </main>
     )
 }

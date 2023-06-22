@@ -3,10 +3,10 @@ import axios from 'axios';
 import { useEffect, useState } from 'react'
 
 import { AddBtn, KanbanButton, ListButton } from '@/components/buttons/Buttons';
-import { BASE_URL } from '../../../utils/request';
+import { BASE_URL } from '../../utils/request';
 import { Task } from './type';
-import Kanban from '../../../components/kanban/Kanban';
-import TaskList from '../../../components/taskList/TaskList';
+import Kanban from '../kanban/Kanban';
+import TaskList from '../taskList/TaskList';
 import AddTask from '@/components/addTask/AddTask';
 import SpanError from '@/components/spanError/spanError';
 import SpanSuccess from '@/components/spanSuccess/spanSuccess';
@@ -14,7 +14,11 @@ import { authToken, validateToken } from '@/services/auth';
 import { useRouter } from 'next/navigation';
 import { getCookie } from 'cookies-next';
 
-export default function TaskManager() {
+interface TaskManagerProps {
+    projectId: string
+}
+
+export default function TaskManager({ projectId }: TaskManagerProps) {
 
     const [tasks, setTasks] = useState<Task[]>([])
     const [errorMsg, setErrorMsg] = useState('')
@@ -31,16 +35,16 @@ export default function TaskManager() {
 
     async function getTasks() {
         try {
-            const token = getCookie('authorization')
-            const response = await axios.get(`${BASE_URL}/api/tasks`, {
+            const token = getCookie('authorization');
+            const response = await axios.get(`${BASE_URL}/api/tasks?projectId=${projectId}`, {
                 headers: {
                     Authorization: `${token}`
                 }
-            })
-            setTasks(response.data)
+            });
+            setTasks(response.data);
         } catch (error) {
             console.log('Erro ao obter as tarefas:', error);
-            setErrorMsg('Não foi possível recuperar a lista de tarefas!')
+            setErrorMsg('Não foi possível recuperar a lista de tarefas!');
         }
     }
 
@@ -76,7 +80,7 @@ export default function TaskManager() {
                     <KanbanButton active={kanban} onClick={handleKanbanClick} />
                 </div>
                 {showMessage && <SpanSuccess>Tarefa adicionada com sucesso</SpanSuccess>}
-                {addTask && <AddTask projectId='' addTaskToList={addTaskToList} getTasks={getTasks} handleAddTask={handleAddTask} />}
+                {addTask && <AddTask projectId={projectId} addTaskToList={addTaskToList} getTasks={getTasks} handleAddTask={handleAddTask} />}
             </section>
             <SpanError>{errorMsg}</SpanError>
             {list && <TaskList tasks={tasks} getTasks={getTasks} />}

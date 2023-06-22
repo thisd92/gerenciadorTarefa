@@ -5,7 +5,7 @@ import { authToken, getToken } from "@/services/auth";
 import { BASE_URL } from "@/utils/request";
 import { BarChart, PieChart } from "@/components/charts/charts";
 import TaskCard from "@/components/taskCard/taskCard";
-import { Task } from "../project/taskManager/type";
+import { Task } from "../../components/taskManager/type";
 import { useRouter } from "next/navigation";
 import { Project } from "@/components/projectItem/type";
 

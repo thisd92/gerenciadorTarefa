@@ -1,4 +1,4 @@
-import { Task } from "@/app/project/taskManager/type";
+import { Task } from "@/components/taskManager/type";
 import React from "react";
 
 interface TaskCardProps {
