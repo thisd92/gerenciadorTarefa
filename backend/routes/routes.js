@@ -259,7 +259,12 @@ router.get('/usersLogin/:email', async (req, res, next) => {
 router.get("/tasks", authenticate, async (req, res, next) => {
     try {
         const { id, company } = req.user
-        const tasks = await Task.find({ "createdBy.user": id, "createdBy.company": company });
+        const { projectId } = req.query
+        const tasks = await Task.find({
+            "createdBy.user": id,
+            "createdBy.company": company,
+            project: projectId
+        });
         res.status(200).json(tasks);
     } catch (error) {
         next(error);
@@ -281,8 +286,19 @@ router.post('/tasks', authenticate, async (req, res, next) => {
             ...req.body,
             createdBy: { user: id, company: company }
         });
-        await newTask.save();
-        res.status(201).json(newTask);
+
+        const savedTask = await newTask.save();
+
+        const { projectId } = req.body;
+        if (projectId) {
+            await Project.findByIdAndUpdate(
+                projectId,
+                { $push: { tasks: savedTask._id } },
+                { new: true }
+            );
+        }
+
+        res.status(201).json(savedTask);
     } catch (error) {
         next(error);
     }
@@ -371,8 +387,18 @@ router.post('/projects', authenticate, async (req, res, next) => {
             ...req.body,
             createdBy: { user: id, company: company }
         });
-        await newProject.save();
-        res.status(201).json(newProject);
+
+        const savedProject = await newProject.save();
+
+        if (savedProject._id) {
+            await Company.findByIdAndUpdate(
+                company,
+                { $push: { projects: savedProject._id } },
+                { new: true }
+            );
+        }
+
+        res.status(201).json(savedProject);
     } catch (error) {
         next(error);
     }
