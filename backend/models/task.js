@@ -6,7 +6,12 @@ const taskSchema = new mongoose.Schema({
     toDo: { type: Boolean },
     isInProgress: { type: Boolean },
     isFinished: { type: Boolean },
-    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
+    date: { type: Date, default: Date.now },
+    project: { type: mongoose.Schema.Types.ObjectId, ref: 'Project'},
+    createdBy: {
+        user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+        company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', required: true },
+    }
 })
 
 const Task = mongoose.model('Task', taskSchema);

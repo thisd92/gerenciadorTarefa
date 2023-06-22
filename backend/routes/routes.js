@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser')
 const User = require('../models/user')
 const Task = require('../models/task');
 const Company = require('../models/company');
+const Project = require('../models/project');
 
 require('dotenv').config()
 
@@ -56,9 +57,13 @@ function errorHandler(err, req, res, next) {
     res.status(500).json({ error: true, message: 'Erro no servidor' });
 }
 
+// ------------------------ PROTECTED ROUTE ------------------------
+
 router.get('/protected', authenticate, (req, res) => {
     res.json({ mensagem: 'Bem-vindo à página protegida!' });
 });
+
+// ------------------------ PROFILE ROUTE --------------------------
 
 router.get("/profile", authenticate, async (req, res, next) => {
     try {
@@ -76,6 +81,8 @@ router.get("/profile", authenticate, async (req, res, next) => {
         next(error)
     }
 })
+
+// ----------------------- COMPANY ROUTE --------------------------
 
 router.post('/company', async (req, res) => {
     try {
@@ -101,6 +108,8 @@ router.get("/company", async (req, res, next) => {
         next(error)
     }
 });
+
+// --------------------------- USER ROUTE -----------------------------------
 
 router.post('/user', async (req, res) => {
     try {
@@ -191,6 +200,8 @@ router.delete("/user/:id", async (req, res, next) => {
     }
 });
 
+// ---------------------------- LOGIN ROUTE ---------------------------------------
+
 router.post('/usersLogin', async (req, res, next) => {
     try {
         const { body: userLogin } = req;
@@ -243,12 +254,12 @@ router.get('/usersLogin/:email', async (req, res, next) => {
     }
 });
 
+// ------------------------------- TASKS ROUTE --------------------------------
+
 router.get("/tasks", authenticate, async (req, res, next) => {
     try {
-        const token = req.headers.authorization
-        const decodedToken = readToken(token)
-        const { company, email, name } = decodedToken
-        const tasks = await Task.find({ createdBy: company });
+        const { id, company } = req.user
+        const tasks = await Task.find({ "createdBy.user": id, "createdBy.company": company });
         res.status(200).json(tasks);
     } catch (error) {
         next(error);
@@ -257,16 +268,18 @@ router.get("/tasks", authenticate, async (req, res, next) => {
 
 router.post('/tasks', authenticate, async (req, res, next) => {
     try {
-        const token = req.headers.authorization;
-        const decodedToken = readToken(token);
-        const { company, email, name } = decodedToken;
+        const { id, company } = req.user;
+        if (!id) {
+            return res.status(401).json({ message: 'Usuário inválido' });
+        }
+
         if (!company) {
             return res.status(401).json({ message: 'Empresa inválida' });
         }
 
         const newTask = new Task({
             ...req.body,
-            createdBy: company
+            createdBy: { user: id, company: company }
         });
         await newTask.save();
         res.status(201).json(newTask);
@@ -317,8 +330,8 @@ router.get("/tasks/:id", authenticate, async (req, res, next) => {
         const { params: { id } } = req;
         const token = req.headers.authorization
         const decodedToken = readToken(token)
-        const { company, email, name } = decodedToken
-        const task = await Task.findOne({ _id: id, createdBy: company })
+        const { company } = decodedToken
+        const task = await Task.findOne({ _id: id, "createdBy.company": company })
         if (!task) {
             res.status(404).json({
                 error: true,
@@ -326,6 +339,94 @@ router.get("/tasks/:id", authenticate, async (req, res, next) => {
             })
         }
         res.status(200).json(task)
+    } catch (error) {
+        next(error)
+    }
+})
+
+// ------------------------------- PROJECTS ROUTE --------------------------------
+
+router.get("/projects", authenticate, async (req, res, next) => {
+    try {
+        const { id, company } = req.user
+        const projects = await Project.find({ "createdBy.user": id, "createdBy.company": company });
+        res.status(200).json(projects);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.post('/projects', authenticate, async (req, res, next) => {
+    try {
+        const { id, company } = req.user;
+        if (!id) {
+            return res.status(401).json({ message: 'Usuário inválido' });
+        }
+
+        if (!company) {
+            return res.status(401).json({ message: 'Empresa inválida' });
+        }
+
+        const newProject = new Project({
+            ...req.body,
+            createdBy: { user: id, company: company }
+        });
+        await newProject.save();
+        res.status(201).json(newProject);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.put("/projects/:id", authenticate, async (req, res, next) => {
+    try {
+        const { params: { id }, body: updatedProject } = req;
+        const project = await Project.findByIdAndUpdate(id, updatedProject, { new: true });
+
+        if (!project) {
+            res.status(404).json({
+                error: true,
+                message: "Project não encontrada"
+            });
+        }
+        res.status(200).json(project);
+    } catch (error) {
+        next(error)
+    }
+});
+
+router.delete("/projects/:id", authenticate, async (req, res, next) => {
+    try {
+        const { params: { id } } = req;
+        const project = await Project.findByIdAndDelete(id);
+
+        if (!project) {
+            return res.status(404).json({
+                error: true,
+                message: "Project não encontrada"
+            });
+        }
+
+        res.status(200).json({
+            message: "Project deletada com sucesso"
+        });
+    } catch (error) {
+        next(error)
+    }
+});
+
+router.get("/projects/:id", authenticate, async (req, res, next) => {
+    try {
+        const { params: { id } } = req;
+        const { company } = req.user
+        const project = await Project.findOne({ _id: id, "createdBy.company": company })
+        if (!project) {
+            return res.status(404).json({
+                error: true,
+                message: "Projeto não encontrado"
+            })
+        }
+        res.status(200).json(project)
     } catch (error) {
         next(error)
     }
