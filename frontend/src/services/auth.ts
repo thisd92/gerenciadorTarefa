@@ -1,18 +1,21 @@
+import { AuthContext } from "@/Context/AuthContext";
 import { BASE_URL } from "@/utils/request";
 import axios from "axios";
 import { getCookie } from "cookies-next";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+import { useContext } from "react";
 
 interface ValidateProps{
     router: AppRouterInstance;
-    onLoginSuccess: () => void
+    onLoginSuccess: () => void;
+    onLoginFail: () => void;
 }
 
 interface AuthProps{
     router: AppRouterInstance;
 }
 
-export const validateToken = async ( {router, onLoginSuccess}: ValidateProps) => {
+export const validateToken = async ( {router, onLoginSuccess, onLoginFail}: ValidateProps) => {
     try {
         const token = getCookie('authorization', {})
 
@@ -24,9 +27,11 @@ export const validateToken = async ( {router, onLoginSuccess}: ValidateProps) =>
         });
         onLoginSuccess()
     } catch (error) {
+        onLoginFail()
         router.push('/login');
     }
 };
+
 export const authToken = async ( {router}: AuthProps) => {
     try {
         const token = getCookie('authorization', {})

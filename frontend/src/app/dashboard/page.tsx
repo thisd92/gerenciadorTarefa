@@ -46,11 +46,15 @@ const Dashboard = () => {
     const sumTasks = (countToDo + countInProgress + countFinished)
 
     if (loading) {
-        return <p>Loading...</p>;
+        return (
+            <main className="flex flex-grow flex-col items-center justify-center w-3/4 my-4 md:w-full">
+                <p>Loading<span className="animate-pulse">...</span></p>
+            </main>
+        );
     }
 
     return (
-        <main className="flex flex-col flex-grow w-full items-center my-4">
+        <main className="flex flex-grow flex-col items-center justify-center w-3/4 my-4 md:w-full">
             <div>
                 <h1>Dashboard</h1>
             </div>

@@ -62,14 +62,8 @@ export default function ProfileButton({ router, onLogout }: ProfileButtonProps) 
                     className="rounded-md p-1"
                     onClick={toggleDropdown}
                 >
-                    <div>
-                        <button className="flex items-center">
-                            <FaUserCircle size={20} />
-                        </button>
-
-                    </div>
+                    <FaUserCircle size={20} />
                 </button>
-
                 <div
                     className={`absolute right-0 z-10 w-56 mt-2 origin-top-right bg-gray-400 rounded-md shadow-lg ${isOpen ? "" : "hidden"
                         }`}
@@ -84,7 +78,7 @@ export default function ProfileButton({ router, onLogout }: ProfileButtonProps) 
                         </button>
                         <button
                             className="block text-left w-full px-4 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-300 hover:text-gray-700"
-                            onClick={() => logout({ router, onLogout })}
+                            onClick={() => logout({ router, onLogout, toggleDropdown })}
                         >
                             Sign Out
                         </button>

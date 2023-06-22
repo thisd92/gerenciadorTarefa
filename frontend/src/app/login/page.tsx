@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 
 import { BASE_URL } from "../../utils/request";
@@ -11,6 +11,7 @@ import SpanError from "@/components/spanError/spanError";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { AuthContext } from "@/Context/AuthContext";
 
 export default function Login() {
     const newUserLogin = {
@@ -22,6 +23,8 @@ export default function Login() {
     const [userLogin, setUserLogin] = useState<UserLogin>(newUserLogin);
     const [errorMsg, setErrorMsg] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+
+    const { setIsLogged } = useContext(AuthContext); // Acessar a função setIsLogged do contexto
 
     const router = useRouter()
 
@@ -36,6 +39,7 @@ export default function Login() {
             setIsLoading(true);
             const response = await axios.post(`${BASE_URL}/api/usersLogin`, userLogin, {withCredentials: true});
             if (response.status === 200) {
+                setIsLogged(true)
                 router.push(`/taskManager`)
             }
         } catch (error) {
