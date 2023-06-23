@@ -5,9 +5,8 @@ import { AiOutlineCloseSquare } from "react-icons/ai"
 import { MdEdit } from "react-icons/md";
 
 import { BASE_URL } from "../../utils/request";
-import { Task } from "@/components/taskManager/type";
 import { FormButton } from "../buttons/Buttons";
-import FormInput from "../formInput/formInput";
+import { FormInput, TextArea } from "../formInput/formInput";
 import LabelForm from "../labelForm/labelForm";
 import SpanError from "../spanError/spanError";
 import { getToken } from "@/services/auth";
@@ -37,7 +36,7 @@ export default function EditProject(
     }, [])
 
     async function getProject() {
-        try{
+        try {
             const response = await axios.get(`${BASE_URL}/api/projects/${projectId}`, {
                 headers: {
                     Authorization: `${getToken()}`
@@ -45,7 +44,7 @@ export default function EditProject(
             })
             console.log(response.data)
             setProject(response.data)
-        }catch(error){
+        } catch (error) {
             console.log(error)
         }
     }
@@ -123,7 +122,7 @@ export default function EditProject(
                                     </div>
                                     <div className="flex flex-col">
                                         <LabelForm htmlFor="description">Description</LabelForm>
-                                        <textarea name="description" value={project.description} id="description" onChange={handleTextChange} />
+                                        <TextArea rows={6} name="description" value={project.description} id="description" onChange={handleTextChange} />
                                         <SpanError>{errorMsg}</SpanError>
                                     </div>
                                     <div className="flex items-center">

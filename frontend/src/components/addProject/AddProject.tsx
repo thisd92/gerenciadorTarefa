@@ -7,7 +7,7 @@ import { MdAddTask } from "react-icons/md";
 
 import { BASE_URL } from "../../utils/request";
 import { FormButton } from "../buttons/Buttons";
-import FormInput from "../formInput/formInput";
+import { FormInput, TextArea } from "../formInput/formInput";
 import LabelForm from "../labelForm/labelForm";
 import SpanError from "../spanError/spanError";
 import { getCookie } from "cookies-next";
@@ -91,7 +91,7 @@ export default function AddProject(
                                     </div>
                                     <div className="flex flex-col">
                                         <LabelForm htmlFor="description">Description</LabelForm>
-                                        <textarea name="description" id="description" onChange={handleTextChange} />
+                                        <TextArea rows={6} name="description" id="description" onChange={handleTextChange} required />
                                         <SpanError>{errorMsg}</SpanError>
                                     </div>
                                     <div className="flex items-center justify-between">

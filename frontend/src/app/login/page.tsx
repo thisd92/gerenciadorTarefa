@@ -5,7 +5,7 @@ import axios from "axios";
 import { BASE_URL } from "../../utils/request";
 import { FormButton } from "@/components/buttons/Buttons";
 import { UserLogin } from "./type";
-import FormInput from "@/components/formInput/formInput";
+import { FormInput } from "@/components/formInput/formInput";
 import LabelForm from "@/components/labelForm/labelForm";
 import SpanError from "@/components/spanError/spanError";
 
@@ -37,7 +37,7 @@ export default function Login() {
         e.preventDefault()
         try {
             setIsLoading(true);
-            const response = await axios.post(`${BASE_URL}/api/usersLogin`, userLogin, {withCredentials: true});
+            const response = await axios.post(`${BASE_URL}/api/usersLogin`, userLogin, { withCredentials: true });
             if (response.status === 200) {
                 setIsLogged(true)
                 router.push(`/taskManager`)
@@ -75,7 +75,7 @@ export default function Login() {
                                 <div>
                                     <FormButton type="submit" disabled={isLoading}>{isLoading ? "Signing In" : "Sign In"}</FormButton>
                                 </div>
-                                <Link className="inline-block align-baseline font-bold text-sm hover:text-green-700" href="#">
+                                <Link className="inline-block align-baseline font-bold text-sm hover:text-green-700" href="/forgot-password">
                                     Forgot Password?
                                 </Link>
                             </div>
