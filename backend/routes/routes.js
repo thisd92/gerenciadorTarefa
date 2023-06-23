@@ -289,13 +289,17 @@ router.post('/tasks', authenticate, async (req, res, next) => {
 
         const savedTask = await newTask.save();
 
-        const { projectId } = req.body;
-        if (projectId) {
-            await Project.findByIdAndUpdate(
-                projectId,
-                { $push: { tasks: savedTask._id } },
-                { new: true }
-            );
+        const { project } = req.body;
+        if (project) {
+            try {
+                await Project.findByIdAndUpdate(
+                    project,
+                    { $push: { tasks: savedTask._id } },
+                    { new: true }
+                );
+            } catch (error){
+                console.log(error)
+            }
         }
 
         res.status(201).json(savedTask);
