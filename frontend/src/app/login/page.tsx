@@ -1,5 +1,5 @@
 'use client'
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 
 import { BASE_URL } from "../../utils/request";
@@ -24,9 +24,13 @@ export default function Login() {
     const [errorMsg, setErrorMsg] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    const { setIsLogged } = useContext(AuthContext); // Acessar a função setIsLogged do contexto
+    const { setIsLogged, isLogged } = useContext(AuthContext); // Acessar a função setIsLogged do contexto
 
     const router = useRouter()
+
+    useEffect(() => {
+        if(isLogged) router.push('/project')
+    })
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = e.target;
@@ -40,7 +44,7 @@ export default function Login() {
             const response = await axios.post(`${BASE_URL}/api/usersLogin`, userLogin, { withCredentials: true });
             if (response.status === 200) {
                 setIsLogged(true)
-                router.push(`/taskManager`)
+                router.push(`/project`)
             }
         } catch (error) {
             setErrorMsg("Invalid Email or Password")
