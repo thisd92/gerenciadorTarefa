@@ -271,6 +271,19 @@ router.get("/tasks", authenticate, async (req, res, next) => {
     }
 });
 
+router.get("/allTasks", authenticate, async (req, res, next) => {
+    try {
+        const { id, company } = req.user
+        const tasks = await Task.find({
+            "createdBy.user": id,
+            "createdBy.company": company,
+        });
+        res.status(200).json(tasks);
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.post('/tasks', authenticate, async (req, res, next) => {
     try {
         const { id, company } = req.user;
