@@ -20,7 +20,7 @@ const Dashboard = () => {
         authToken({ router })
         const fetchData = async () => {
             try {
-                const responseTasks = await axios.get(`${BASE_URL}/api/tasks`, {
+                const responseTasks = await axios.get(`${BASE_URL}/api/allTasks`, {
                     headers: {
                         Authorization: getToken(),
                     },
@@ -60,6 +60,7 @@ const Dashboard = () => {
     const countFinished = tasksFinished.length;
 
     const sumTasks = (countToDo + countInProgress + countFinished)
+    const sumProjects = (countProjectsToDo + countProjectsFinished)
 
     if (loading) {
         return (
@@ -70,20 +71,28 @@ const Dashboard = () => {
     }
 
     return (
-        <main className="flex flex-grow flex-col items-center justify-center w-3/4 my-4 md:w-full">
+        <main className="flex flex-grow flex-col items-center h-full w-3/4 my-4 md:w-full">
             <div>
-                <h1>Dashboard</h1>
+                <h1 className="font-bold text-lg">Dashboard</h1>
             </div>
             <section className="flex flex-row flex-wrap w-full justify-around mt-4">
                 <div className="flex flex-col items-center rounded-lg shadow-md shadow-gray-400 justify-center w-1/4 bg-gray-100 p-4">
-                    <div>
-                        <h2 className="text-xl font-bold">Tasks</h2>
+                    <div className="flex flex-col">
+                        <h2 className="text-xl font-bold">Projects</h2>
+                        <div>
+                            <p className="text-sm">Total: {sumProjects}</p>
+                            <p className="text-sm">To Do: {countProjectsToDo}</p>
+                            <p className="text-sm">Finished: {countProjectsFinished}</p>
+                        </div>
                     </div>
-                    <div className="mt-4">
-                        <p className="text-sm">Total: {sumTasks}</p>
-                        <p className="text-sm">To Do: {countToDo}</p>
-                        <p className="text-sm">In Progress: {countInProgress}</p>
-                        <p className="text-sm">Finished: {countFinished}</p>
+                    <div className="flex flex-col mt-4">
+                        <h2 className="text-xl font-bold">Tasks</h2>
+                        <div>
+                            <p className="text-sm">Total: {sumTasks}</p>
+                            <p className="text-sm">To Do: {countToDo}</p>
+                            <p className="text-sm">In Progress: {countInProgress}</p>
+                            <p className="text-sm">Finished: {countFinished}</p>
+                        </div>
                     </div>
                 </div>
                 <div className="flex items-center rounded-lg shadow-md shadow-gray-400 justify-center w-1/4 bg-gray-100 p-1">
@@ -104,7 +113,7 @@ const Dashboard = () => {
                     />
                 </div>
                 <div className="flex flex-col items-center rounded-lg shadow-md shadow-gray-400 justify-center bg-gray-100 p-2 mt-4">
-                    <h2>Task Board</h2>
+                    <h2 className="font-bold">Task Board</h2>
                     <div className="grid grid-cols-3 gap-4">
                         <TaskCard title="To Do" tasks={tasksToDo} />
                         <TaskCard title="In Progress" tasks={tasksInProgress} />
