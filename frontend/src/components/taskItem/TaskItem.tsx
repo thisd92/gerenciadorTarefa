@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 
 import { getToken } from "@/services/auth";
@@ -7,31 +7,40 @@ import { BASE_URL } from "@/utils/request";
 import { DeleteBtn, EditBtn } from "../buttons/Buttons";
 import { Task } from "@/components/taskManager/type";
 import EditTask from "../editTask/EditTask";
-import { useRouter } from "next/navigation";
+import { TaskContext } from "@/Context/TaskContext";
+import DeleteModal from "../deleteModal/deleteModal";
 
 interface TaskItemProps {
     index: number
     task: Task;
     expanded: boolean;
+    projectId: string;
     onToggleExpand: (taskId: string) => void;
     onCheckboxChange: (taskId: string, property: keyof Task) => void;
-    getTasks: () => void;
 }
 
 const TaskItem: React.FC<TaskItemProps> = ({
     index,
     task,
     expanded,
+    projectId,
     onToggleExpand,
     onCheckboxChange,
-    getTasks,
 }) => {
 
     const [editTask, setEditTask] = useState(false)
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+
+    const { getTasks } = useContext(TaskContext)
 
     const handleEditTask = () => {
         setEditTask(!editTask)
     }
+
+    const handleDeleteClick = () => {
+        setShowDeleteModal(true);
+    };
 
     const deleteTask = async () => {
         try {
@@ -40,12 +49,12 @@ const TaskItem: React.FC<TaskItemProps> = ({
                     Authorization: `${getToken()}`
                 }
             })
-            getTasks()
+            getTasks(projectId)
+            setShowDeleteModal(false)
         } catch (error) {
             console.log(error)
         }
     };
-
 
     return (
         <>
@@ -55,18 +64,18 @@ const TaskItem: React.FC<TaskItemProps> = ({
                     <div className="flex flex-row justify-between">
                         <div>
                             <span onClick={() => onToggleExpand(task._id ?? '')} className="font-bold">
-                                Name: {task.name}
+                               {task.name}
                             </span>
                         </div>
                         <div className="flex flex-row items-center">
                             <EditBtn active={editTask} onClick={handleEditTask} />
-                            <DeleteBtn onClick={deleteTask} />
+                            <DeleteBtn onClick={handleDeleteClick} />
                         </div>
 
                     </div>
                     {expanded && (
                         <>
-                            <span>Description: {task.description}</span>
+                            <span className="text-justify">{task.description}</span>
                             <div className="flex items-center">
                                 <span>To Do </span>
                                 <input
@@ -102,7 +111,13 @@ const TaskItem: React.FC<TaskItemProps> = ({
                 </div>
             </li>
             <div>
-                {editTask && <EditTask taskId={task._id ?? ""} getTasks={getTasks} handleEditTask={handleEditTask} />}
+                {editTask && <EditTask projectId={projectId} taskId={task._id ?? ""}
+                    handleEditTask={handleEditTask} />}
+                {showDeleteModal && <DeleteModal
+                    taskName={task.name}
+                    deleteTask={deleteTask}
+                    closeModal={() => setShowDeleteModal(false)}
+                />}
             </div>
         </>
     )

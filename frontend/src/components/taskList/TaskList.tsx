@@ -1,21 +1,23 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import { BASE_URL } from '@/utils/request';
 import { getToken } from '@/services/auth';
 import { Task } from '@/components/taskManager/type';
 import TaskItem from '../taskItem/TaskItem';
+import { TaskContext } from '@/Context/TaskContext';
 
-interface TaskListProps {
-    tasks: Task[];
-    getTasks: () => void
+interface TaskLisProps {
+    projectId: string
 }
 
-const TaskList: React.FC<TaskListProps> = ({ tasks, getTasks }) => {
+const TaskList = ({ projectId }: TaskLisProps) => {
     const [taskList, setTaskList] = useState<Task[]>([]);
     const [expandedTasks, setExpandedTasks] = useState<string[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [tasksPerPage] = useState(10);
+
+    const { tasks } = useContext(TaskContext)
 
     const indexOfLastTask = currentPage * tasksPerPage;
     const indexOfFirstTask = indexOfLastTask - tasksPerPage;
@@ -111,7 +113,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, getTasks }) => {
     };
 
     return (
-        <section className="w-2/6">
+        <section className="w-2/4">
             <div className="border-2 border-gray-300 rounded-md shadow-lg pt-6 pb-8 mb-4">
                 <header className="flex font-bold p-1 justify-center">
                     <div>
@@ -126,9 +128,9 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, getTasks }) => {
                                 key={task._id}
                                 task={task}
                                 expanded={expandedTasks.includes(task._id ?? '')}
+                                projectId={projectId}
                                 onToggleExpand={toggleExpandTask}
                                 onCheckboxChange={handleCheckboxChange}
-                                getTasks={getTasks}
                             />
                         ))}
                     </ul>

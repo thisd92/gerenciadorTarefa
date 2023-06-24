@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useRef, useState } from "react";
+import { useRef, useState, useContext } from "react";
 
 import { AiOutlineCloseSquare } from "react-icons/ai"
 import { MdAddTask } from "react-icons/md";
@@ -11,10 +11,10 @@ import { FormInput, TextArea } from "../formInput/formInput";
 import LabelForm from "../labelForm/labelForm";
 import SpanError from "../spanError/spanError";
 import { getCookie } from "cookies-next";
+import { TaskContext } from "@/Context/TaskContext";
 
 export default function AddTask(
-    { getTasks, handleAddTask, addTaskToList, projectId }: {
-        getTasks: () => void,
+    { handleAddTask, addTaskToList, projectId }: {
         handleAddTask: () => void,
         addTaskToList: () => void,
         projectId: string
@@ -28,6 +28,8 @@ export default function AddTask(
         isFinished: false,
         project: projectId
     }
+
+    const { getTasks } = useContext(TaskContext)
 
     const [task, setTask] = useState<Task>(newTask)
     const [errorMsg, setErrorMsg] = useState("")
@@ -56,7 +58,7 @@ export default function AddTask(
             });
             console.log(projectId)
             resetValues()
-            getTasks()
+            getTasks(projectId)
             handleAddTask()
             addTaskToList()
         } catch (error) {

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 
 import { AiOutlineCloseSquare } from "react-icons/ai"
 import { MdEdit } from "react-icons/md";
@@ -11,12 +11,13 @@ import { FormInput, TextArea } from "../formInput/formInput";
 import LabelForm from "../labelForm/labelForm";
 import SpanError from "../spanError/spanError";
 import { getToken } from "@/services/auth";
+import { TaskContext } from "@/Context/TaskContext";
 
 export default function EditTask(
-    { getTasks, handleEditTask, taskId }: {
-        getTasks: () => void,
+    { handleEditTask, taskId, projectId }: {
         handleEditTask: () => void,
         taskId: string
+        projectId: string
     }) {
 
     const newTask: Task = {
@@ -31,6 +32,8 @@ export default function EditTask(
     const [errorMsg, setErrorMsg] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const formRef = useRef<HTMLFormElement>(null)
+
+    const { getTasks } = useContext(TaskContext)
 
     useEffect(() => {
         getTask()
@@ -96,8 +99,8 @@ export default function EditTask(
                     Authorization: `${getToken()}`
                 }
             });
-            getTasks()
             handleEditTask()
+            getTasks(projectId)
         } catch (error) {
             setErrorMsg("erro")
             setTimeout(() => setErrorMsg(""), 2000)

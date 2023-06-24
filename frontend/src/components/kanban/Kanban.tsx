@@ -1,23 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import axios from 'axios';
 
 import { Task } from '@/components/taskManager/type';
 import { BASE_URL } from '../../utils/request';
 import { getToken } from '@/services/auth';
+import { TaskContext } from '@/Context/TaskContext';
 
 interface KanbanProps {
-    tasks: Task[];
-    getTasks: () => void;
+    projectId: string
 }
 
-const Kanban: React.FC<KanbanProps> = ({ tasks, getTasks }) => {
+const Kanban = ({ projectId }: KanbanProps) => {
+
+    const { tasks, getTasks } = useContext(TaskContext)
+
     const [taskList, setTaskList] = useState<Task[]>(tasks);
 
-    useEffect(() => {
-        getTasks(); // Atualiza o quadro quando o componente é renderizado
-    }, []);
-    
     useEffect(() => {
         setTaskList(tasks); // Atualiza o quadro quando houver alteração nas tarefas
     }, [tasks]);
@@ -75,7 +74,7 @@ const Kanban: React.FC<KanbanProps> = ({ tasks, getTasks }) => {
                     Authorization: `${getToken()}`
                 }
             });
-            getTasks();
+            getTasks(projectId);
             console.log('Task updated successfully');
         } catch (error) {
             console.error('Error updating task:', error);
@@ -99,10 +98,10 @@ const Kanban: React.FC<KanbanProps> = ({ tasks, getTasks }) => {
         ));
 
     return (
-        <section className="w-2/4 border-2 border-gray-300 rounded-md shadow-lg px-8 pt-6 pb-8 mb-4">
+        <section className="w-3/4 h-full border-2 border-gray-300 rounded-md shadow-lg px-8 pt-6 pb-8 mb-6">
             <DragDropContext onDragEnd={handleDragEnd}>
                 <div className="flex flex-row gap-4 justify-around">
-                    <div>
+                    <div className='w-1/3'>
                         <Droppable droppableId="toDo">
                             {(provided) => (
                                 <div className="flex flex-col gap-2">
@@ -115,7 +114,7 @@ const Kanban: React.FC<KanbanProps> = ({ tasks, getTasks }) => {
                             )}
                         </Droppable>
                     </div>
-                    <div>
+                    <div className='w-1/3'>
                         <Droppable droppableId="inProgress">
                             {(provided) => (
                                 <div className="flex flex-col gap-2">
@@ -128,7 +127,7 @@ const Kanban: React.FC<KanbanProps> = ({ tasks, getTasks }) => {
                             )}
                         </Droppable>
                     </div>
-                    <div>
+                    <div className='w-1/3'>
                         <Droppable droppableId="finished">
                             {(provided) => (
                                 <div className="flex flex-col gap-2">
