@@ -43,7 +43,7 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({ children, projectId 
 
     useEffect(() => {
         fetchTasks(projectId)
-    }, [])
+    }, [tasks])
 
     return (
         <TaskContext.Provider value={{ tasks, getTasks: fetchTasks, errorMsg }}>
