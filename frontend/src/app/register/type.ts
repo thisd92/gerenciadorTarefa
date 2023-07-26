@@ -6,6 +6,8 @@ export interface User {
     birth: string,
     tel: string,
     role?: string
+    _id?: string
+    squad?: string
 }
 
 export interface ValidatePass {

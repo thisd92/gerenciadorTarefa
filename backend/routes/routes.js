@@ -8,6 +8,7 @@ const User = require('../models/user')
 const Task = require('../models/task');
 const Company = require('../models/company');
 const Project = require('../models/project');
+const Squad = require('../models/squad');
 
 require('dotenv').config()
 
@@ -109,6 +110,19 @@ router.get("/company", async (req, res, next) => {
     }
 });
 
+// --------------------------- USERS ROUTE -----------------------------------
+
+router.get("/users", authenticate, async (req, res, next) => {
+    try {
+        const { company } = req.user
+        const users = await User.find({ "company": company })
+        res.json(users);
+    } catch {
+        next(error)
+    }
+});
+
+
 // --------------------------- USER ROUTE -----------------------------------
 
 router.post('/user', async (req, res) => {
@@ -163,7 +177,6 @@ router.get("/user/:id", async (req, res, next) => {
     }
 })
 
-
 router.put("/user/:id", async (req, res, next) => {
     try {
         const { params: { id }, body: updatedUser } = req;
@@ -175,6 +188,25 @@ router.put("/user/:id", async (req, res, next) => {
                 message: "Usuário não encontrado"
             });
         }
+
+        if (updatedUser.squad) {
+            const squad = await Squad.findOne({ _id: updatedUser.squad })
+
+            if (!squad.users.includes(updatedUser._id)) {
+                await Squad.findByIdAndUpdate(
+                    user.squad,
+                    { $push: { users: updatedUser._id } },
+                    { new: true }
+                );
+
+            } else {
+                return res.status(400).json({
+                    message: "Usuário já está na Squad"
+                })
+            }
+
+        }
+
         res.status(200).json(user);
     } catch (error) {
         next(error)
@@ -261,7 +293,6 @@ router.get("/tasks", authenticate, async (req, res, next) => {
         const { id, company } = req.user
         const { projectId } = req.query
         const tasks = await Task.find({
-            "createdBy.user": id,
             "createdBy.company": company,
             project: projectId
         });
@@ -275,7 +306,6 @@ router.get("/allTasks", authenticate, async (req, res, next) => {
     try {
         const { id, company } = req.user
         const tasks = await Task.find({
-            "createdBy.user": id,
             "createdBy.company": company,
         });
         res.status(200).json(tasks);
@@ -310,7 +340,7 @@ router.post('/tasks', authenticate, async (req, res, next) => {
                     { $push: { tasks: savedTask._id } },
                     { new: true }
                 );
-            } catch (error){
+            } catch (error) {
                 console.log(error)
             }
         }
@@ -382,7 +412,7 @@ router.get("/tasks/:id", authenticate, async (req, res, next) => {
 router.get("/projects", authenticate, async (req, res, next) => {
     try {
         const { id, company } = req.user
-        const projects = await Project.find({ "createdBy.user": id, "createdBy.company": company });
+        const projects = await Project.find({ "createdBy.company": company });
         res.status(200).json(projects);
     } catch (error) {
         next(error);
@@ -470,6 +500,126 @@ router.get("/projects/:id", authenticate, async (req, res, next) => {
             })
         }
         res.status(200).json(project)
+    } catch (error) {
+        next(error)
+    }
+})
+
+// ------------------------------- SQUAD ROUTE --------------------------------
+
+router.get("/squad", authenticate, async (req, res, next) => {
+    try {
+        const { company } = req.user
+        const squad = await Squad.find({ "company": company });
+        if (!squad) {
+            return res.status(404).json({
+                message: "Squad não encontrada"
+            })
+        }
+
+        res.status(200).json(squad);
+
+    } catch (error) {
+        if (res.status(404)) {
+            console.log('Não encontrado squad')
+        }
+        next(error);
+    }
+});
+
+router.get("/squads", authenticate, async (req, res, next) => {
+    try {
+        const squads = await Squad.find();
+        res.status(200).json(squads);
+    } catch (error) {
+        if (res.status(404)) {
+            console.log('Não encontrado team')
+        }
+        next(error);
+    }
+});
+
+router.post('/squad', authenticate, async (req, res, next) => {
+    try {
+        const { id, company } = req.user;
+        if (!id) {
+            return res.status(401).json({ message: 'Usuário inválido' });
+        }
+
+        if (!company) {
+            return res.status(401).json({ message: 'Empresa inválida' });
+        }
+
+        const newSquad = new Squad({
+            ...req.body,
+            company: company
+        });
+
+        const savedSquad = await newSquad.save();
+
+        if (savedSquad._id) {
+            await Company.findByIdAndUpdate(
+                company,
+                { $push: { squads: savedSquad._id } },
+                { new: true }
+            );
+        }
+
+        res.status(201).json(savedSquad);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.put("/squad/:id", authenticate, async (req, res, next) => {
+    try {
+        const { params: { id }, body: updatedSquad } = req;
+        const squad = await Squad.findByIdAndUpdate(id, updatedSquad, { new: true });
+
+        if (!squad) {
+            res.status(404).json({
+                error: true,
+                message: "Squad não encontrada"
+            });
+        }
+        res.status(200).json(squad);
+    } catch (error) {
+        next(error)
+    }
+});
+
+router.delete("/squad/:id", authenticate, async (req, res, next) => {
+    try {
+        const { params: { id } } = req;
+        const squad = await Squad.findByIdAndDelete(id);
+
+        if (!squad) {
+            return res.status(404).json({
+                error: true,
+                message: "Squad não encontrada"
+            });
+        }
+
+        res.status(200).json({
+            message: "Squad deletada com sucesso"
+        });
+    } catch (error) {
+        next(error)
+    }
+});
+
+router.get("/squad/:id", authenticate, async (req, res, next) => {
+    try {
+        const { params: { id } } = req;
+        console.log(id)
+        const squad = await Squad.findOne({ _id: id })
+        if (!squad) {
+            return res.status(404).json({
+                error: true,
+                message: "Squad não encontrada"
+            })
+        }
+        res.status(200).json(squad)
     } catch (error) {
         next(error)
     }

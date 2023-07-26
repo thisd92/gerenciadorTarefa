@@ -6,7 +6,8 @@ const companySchema = new mongoose.Schema({
     addres: { type: String, required: true },
     city: { type: String },
     uf: { type: String },
-    projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }]
+    projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
+    squads: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Squad', unique: true }]
 
 })
 

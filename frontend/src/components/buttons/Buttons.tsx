@@ -1,6 +1,7 @@
 import { BsKanban, BsListCheck } from 'react-icons/bs'
 import { FormButtonProps } from './type';
 import { MdDeleteForever, MdEdit, MdOutlineAdd } from 'react-icons/md';
+import { AiFillSave, AiOutlineUsergroupAdd } from 'react-icons/ai';
 
 const size = 30
 
@@ -23,10 +24,32 @@ const AddBtn = ({ active, onClick }: any) => {
     )
 }
 
+const AddSquadBtn = ({ active, onClick }: any) => {
+    return (
+        <button
+            className={`${active ? 'bg-gray-400' : 'bg-gray-300'} shadow-gray-400 p-1 rounded-md shadow-md`}
+            onClick={onClick}
+        >
+            <AiOutlineUsergroupAdd size={20} />
+        </button >
+    )
+}
+
+const UpdateSquadBtn = ({ active, onClick }: any) => {
+    return (
+        <button
+            className={`${active ? 'bg-gray-400' : 'bg-gray-300'} shadow-gray-400 p-1 rounded-md shadow-md`}
+            onClick={onClick}
+        >
+            <AiFillSave size={18} />
+        </button >
+    )
+}
+
 const EditBtn = ({ active, onClick }: {active: any, onClick: () => void}) => {
     return (
         <button
-            className={`p-1 rounded-md border border-gray-200 shadow-gray-400 shadow-md ${active ? 'bg-gray-500' : 'bg-gray-300'}`}
+            className={`rounded-md shadow-gray-400 shadow-md ${active ? 'bg-gray-500' : 'bg-gray-300'}`}
             onClick={onClick}
         >
             <MdEdit size={16} color='yellow' />
@@ -67,4 +90,4 @@ const KanbanButton = ({ active, onClick }: any) => {
     );
 };
 
-export { AddBtn, FormButton, ListButton, KanbanButton, EditBtn, DeleteBtn };
+export { AddBtn, AddSquadBtn, FormButton, ListButton, KanbanButton, EditBtn, DeleteBtn, UpdateSquadBtn };

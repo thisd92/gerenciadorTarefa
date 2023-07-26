@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema({
     birth: { type: String },
     tel: { type: String },
     role: { type: String, enum: ['admin', 'user'], default: 'user' },
-    company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company' }
+    company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
+    squad: { type: mongoose.Schema.Types.ObjectId, ref: 'Squad' }
 })
 
 const User = mongoose.model('User', userSchema);

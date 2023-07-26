@@ -59,7 +59,7 @@ export default function Profile({ params }: UserProps) {
     }
 
     return (
-        <main className="flex flex-col flex-grow justify-center">
+        <main className="flex flex-col flex-grow justify-center items-center w-full">
             {userData.role === "user" && <ProfileUser user={userData} />}
             {userData.role === "admin" && <ProfileAdmin user={userData} />}
         </main>
