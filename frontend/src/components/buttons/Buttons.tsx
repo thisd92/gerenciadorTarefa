@@ -49,7 +49,7 @@ const UpdateSquadBtn = ({ active, onClick }: any) => {
 const EditBtn = ({ active, onClick }: {active: any, onClick: () => void}) => {
     return (
         <button
-            className={`rounded-md shadow-gray-400 shadow-md ${active ? 'bg-gray-500' : 'bg-gray-300'}`}
+            className={`ml-1 p-1 rounded-md border shadow-gray-400 shadow-md ${active ? 'bg-gray-500' : 'bg-gray-300'}`}
             onClick={onClick}
         >
             <MdEdit size={16} color='yellow' />
