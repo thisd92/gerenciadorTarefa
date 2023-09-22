@@ -1,3 +1,6 @@
+import axios from "axios"
+import { getCookie } from "cookies-next"
+
 import { useState } from "react"
 
 import { User } from "@/app/register/type"
@@ -5,9 +8,7 @@ import { UpdateSquadBtn } from "../buttons/Buttons"
 import { Squad } from "./type"
 import { Select } from "./selectForm"
 import LabelForm from "../labelForm/labelForm"
-import axios from "axios"
 import { BASE_URL } from "@/utils/request"
-import { getCookie } from "cookies-next"
 
 interface UserSquadProps {
     index: number,
@@ -59,7 +60,7 @@ export default function UserSquad({ index, user, squads }: UserSquadProps) {
                             <LabelForm htmlFor="squad">
                                 Select a Squad:
                             </LabelForm>
-                            <Select squads={squads} selectedSquad={selectedSquad} setSelectedSquad={setSelectedSquad} />
+                            <Select squads={squads} selectedSquad={selectedSquad} userSquad={user.squad} setSelectedSquad={setSelectedSquad} />
                             <UpdateSquadBtn onClick={handleSubmit} />
                         </form>
                     </div>
