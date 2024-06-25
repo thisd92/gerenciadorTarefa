@@ -1,4 +1,4 @@
-export interface Project {
+export interface ProjectType {
     name: string,
     description: string,
     toDo?: boolean,

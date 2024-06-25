@@ -1,7 +1,7 @@
 'use client'
 import AddProject from '@/components/addProject/AddProject';
 import { AddBtn, ListButton } from '@/components/buttons/Buttons';
-import { Project } from '@/components/projectItem/type';
+import { ProjectType } from '@/components/projectItem/type';
 import ProjectList from '@/components/projectList/projectList';
 import SpanError from '@/components/spanError/spanError';
 import SpanSuccess from '@/components/spanSuccess/spanSuccess';
@@ -19,7 +19,7 @@ export default function Project() {
     const router = useRouter();
 
     const [addProject, setAddProject] = useState(false)
-    const [projects, setProjects] = useState<Project[]>([])
+    const [projects, setProjects] = useState<ProjectType[]>([])
     const [list, setList] = useState(true)
     const [errorMsg, setErrorMsg] = useState('')
     const [showMessage, setShowMessage] = useState(false);

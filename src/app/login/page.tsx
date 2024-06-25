@@ -41,7 +41,7 @@ export default function Login() {
         e.preventDefault()
         try {
             setIsLoading(true);
-            const response = await axios.post(`${BASE_URL}/api/usersLogin`, userLogin, { withCredentials: true });
+            const response = await axios.post(`${BASE_URL}/api/signin`, userLogin, { withCredentials: true });
             if (response.status === 200) {
                 setIsLogged(true)
                 router.push(`/project`)

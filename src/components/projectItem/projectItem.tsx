@@ -6,13 +6,13 @@ import { getToken } from "@/services/auth";
 import { BASE_URL } from "@/utils/request";
 
 import { DeleteBtn, EditBtn } from "../buttons/Buttons";
-import { Project } from "./type";
+import { ProjectType } from "./type";
 import EditProject from "../editProject/EditProject";
 import Link from "next/link";
 
 interface ProjectItemProps {
     index: number
-    project: Project;
+    project: ProjectType;
     getProjects: () => void;
 }
 
